@@ -3,7 +3,10 @@ package com.jdbc.dao;
 import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Developer;
 import com.jdbc.model.Project;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,16 +16,6 @@ public class ProjectDAO extends DataAccessObject<Project> {
 
     private Connection connection;
     private SessionFactory sessionFactory;
-
-    private static final String INSERT = "INSERT INTO projects(project_name, status, cost, date) " +
-                                         "VALUES (?, ?, ?, ?);";
-    private static final String SELECT = "SELECT * FROM projects WHERE project_id = ?;";
-    private static final String SELECT_ALL = "SELECT * FROM projects;";
-    private static final String UPDATE =
-            "UPDATE projects " +
-            "SET project_name = ?, status = ?, cost = ?, date = ? " +
-            "WHERE project_id = ?;";
-    private static final String DELETE = "DELETE FROM projects WHERE project_id = ?;";
 
     private static String getSumSalaryByProject;
     private static String getAllDevelopersByProject;
@@ -49,37 +42,34 @@ public class ProjectDAO extends DataAccessObject<Project> {
     @Override
     public void create(Project project) {
 
-        try (PreparedStatement statement = connection.prepareStatement(INSERT)){
-
-            statement.setString(1, project.getProjectName());
-            statement.setString(2, project.getStatus());
-            statement.setInt(3, project.getCost());
-            statement.setDate(4, project.getDate());
-            statement.execute();
-        } catch (SQLException e){
+        Session session = null;
+        Transaction transaction;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.save(project);
+            transaction.commit();
+        } catch (HibernateException e){
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
     @Override
     public Project getByID(int id) {
 
+        Session session = null;
         Project project = new Project();
 
-        try (PreparedStatement statement = connection.prepareStatement(SELECT)){
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                project.setProjectID(id);
-                project.setProjectName(resultSet.getString("project_name"));
-                project.setStatus(resultSet.getString("status"));
-                project.setCost(resultSet.getInt("cost"));
-                project.setDate(resultSet.getDate("date"));
-            } else
-                return null;
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            project = (Project) session.createQuery("from Project p where p.id=:id")
+                    .setParameter("id", id).getSingleResult();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
         return project;
     }
@@ -87,52 +77,53 @@ public class ProjectDAO extends DataAccessObject<Project> {
     @Override
     public List<Project> getAll() {
 
-        List<Project> projectsList = new ArrayList<>();
+        Session session = null;
+        List<Project> projects = new ArrayList<>();
 
-        try(PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-
-                Project project = new Project();
-                project.setProjectID(resultSet.getInt("project_id"));
-                project.setProjectName(resultSet.getString("project_name"));
-                project.setStatus(resultSet.getString("status"));
-                project.setCost(resultSet.getInt("cost"));
-                project.setDate(resultSet.getDate("date"));
-
-                projectsList.add(project);
-            }
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            projects = session.createQuery("from Project").list();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
-        return projectsList;
+        return projects;
     }
 
     @Override
     public void update(Project project) {
 
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE)) {
+        Session session = null;
+        Transaction transaction;
 
-            statement.setString(1, project.getProjectName());
-            statement.setString(2, project.getStatus());
-            statement.setInt(3, project.getCost());
-            statement.setDate(4, project.getDate());
-            statement.setInt(5, project.getProjectID());
-            statement.execute();
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.update(project);
+            transaction.commit();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Project project) {
 
-        try(PreparedStatement statement = connection.prepareStatement(DELETE)) {
-            statement.setInt(1, id);
-            statement.execute();
-        } catch (SQLException e) {
+        Session session = null;
+        Transaction transaction;
+
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.delete(project);
+            transaction.commit();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
@@ -309,4 +300,8 @@ public class ProjectDAO extends DataAccessObject<Project> {
         return result;
     }
 
+    private void closeSession(Session session) {
+        if (session != null)
+            session.close();
+    }
 }
