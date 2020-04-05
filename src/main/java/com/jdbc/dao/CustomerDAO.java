@@ -2,7 +2,9 @@ package com.jdbc.dao;
 
 import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Customer;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,13 +18,6 @@ public class CustomerDAO extends DataAccessObject<Customer> {
     private Connection connection;
     private SessionFactory sessionFactory;
 
-    private static final String INSERT = "INSERT INTO customers(customer_name, location) " +
-            "VALUES (?, ?);";
-    private static final String SELECT = "SELECT * FROM customers WHERE customer_id = ?;";
-    private static final String SELECT_ALL = "SELECT * FROM customers;";
-    private static final String UPDATE = "UPDATE customers SET customer_name = ?, location = ? WHERE customer_id = ?;";
-    private static final String DELETE = "DELETE FROM customers WHERE customer_id = ?;";
-
     private static String unlinkCustomerProject = "DELETE FROM customer_project WHERE customer_id = ?;";
 
     public CustomerDAO(Connection connection, SessionFactory sessionFactory) {
@@ -33,33 +28,35 @@ public class CustomerDAO extends DataAccessObject<Customer> {
     @Override
     public void create(Customer customer) {
 
-        try (PreparedStatement statement = connection.prepareStatement(INSERT)){
+        Session session = null;
+        Transaction transaction;
 
-            statement.setString(1, customer.getCustomerName());
-            statement.setString(2, customer.getLocation());
-            statement.execute();
-        } catch (SQLException e){
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.save(customer);
+            transaction.commit();
+        } catch (Exception e){
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
     @Override
     public Customer getByID(int id) {
 
+        Session session = null;
         Customer customer = new Customer();
 
-        try (PreparedStatement statement = connection.prepareStatement(SELECT)){
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                customer.setCustomerID(id);
-                customer.setCustomerName(resultSet.getString("customer_name"));
-                customer.setLocation(resultSet.getString("location"));
-            } else
-                return null;
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            customer = (Customer) session.createQuery("from Customer c where c.id=:id")
+                    .setParameter("id", id).getSingleResult();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
         return customer;
     }
@@ -67,48 +64,52 @@ public class CustomerDAO extends DataAccessObject<Customer> {
     @Override
     public List<Customer> getAll() {
 
-        List<Customer> customersList = new ArrayList<>();
+        Session session = null;
+        List customers = new ArrayList<>();
 
-        try(PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-
-                Customer customer = new Customer();
-                customer.setCustomerID(resultSet.getInt("customer_id"));
-                customer.setCustomerName(resultSet.getString("customer_name"));
-                customer.setLocation(resultSet.getString("location"));
-
-                customersList.add(customer);
-            }
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            customers = session.createQuery("from Customer ").list();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
-        return customersList;
+        return customers;
     }
 
     @Override
     public void update(Customer customer) {
 
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE)) {
-
-            statement.setString(1, customer.getCustomerName());
-            statement.setString(2, customer.getLocation());
-            statement.setInt(3, customer.getCustomerID());
-            statement.execute();
-        } catch (SQLException e) {
+        Session session = null;
+        Transaction transaction;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.update(customer);
+            transaction.commit();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Customer customer) {
 
-        try(PreparedStatement statement = connection.prepareStatement(DELETE)) {
-            statement.setInt(1, id);
-            statement.execute();
-        } catch (SQLException e) {
+        Session session = null;
+        Transaction transaction;
+
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.delete(customer);
+            transaction.commit();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
@@ -121,5 +122,10 @@ public class CustomerDAO extends DataAccessObject<Customer> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void closeSession(Session session) {
+        if (session != null)
+            session.close();
     }
 }

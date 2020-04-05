@@ -101,6 +101,7 @@ public class CompanyDAO extends DataAccessObject<Company> {
 
         Session session = null;
         Transaction transaction;
+
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
