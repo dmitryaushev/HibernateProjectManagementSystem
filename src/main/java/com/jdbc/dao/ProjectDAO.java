@@ -3,6 +3,7 @@ package com.jdbc.dao;
 import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Developer;
 import com.jdbc.model.Project;
+import org.hibernate.SessionFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 public class ProjectDAO extends DataAccessObject<Project> {
 
     private Connection connection;
+    private SessionFactory sessionFactory;
 
     private static final String INSERT = "INSERT INTO projects(project_name, status, cost, date) " +
                                          "VALUES (?, ?, ?, ?);";
@@ -39,8 +41,9 @@ public class ProjectDAO extends DataAccessObject<Project> {
     private static String getCustomerProjectLink = "SELECT * FROM customer_project " +
                                                    "WHERE customer_id = ? AND project_id = ?;";
 
-    public ProjectDAO(Connection connection) {
+    public ProjectDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override

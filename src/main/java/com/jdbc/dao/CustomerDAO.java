@@ -2,6 +2,7 @@ package com.jdbc.dao;
 
 import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Customer;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.util.List;
 public class CustomerDAO extends DataAccessObject<Customer> {
 
     private Connection connection;
+    private SessionFactory sessionFactory;
 
     private static final String INSERT = "INSERT INTO customers(customer_name, location) " +
             "VALUES (?, ?);";
@@ -23,8 +25,9 @@ public class CustomerDAO extends DataAccessObject<Customer> {
 
     private static String unlinkCustomerProject = "DELETE FROM customer_project WHERE customer_id = ?;";
 
-    public CustomerDAO(Connection connection) {
+    public CustomerDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override

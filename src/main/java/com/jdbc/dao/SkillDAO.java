@@ -1,6 +1,7 @@
 package com.jdbc.dao;
 
 import com.jdbc.model.Skill;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,12 +14,14 @@ import java.util.List;
 public class SkillDAO {
 
     private Connection connection;
+    private SessionFactory sessionFactory;
 
     private static final String SELECT_ALL = "SELECT * FROM skills;";
     private static final String SELECT = "SELECT * FROM skills WHERE department = ? AND level = ?;";
 
-    public SkillDAO(Connection connection) {
+    public SkillDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
+        this.sessionFactory = sessionFactory;
     }
 
     public List<Skill> getAll() {

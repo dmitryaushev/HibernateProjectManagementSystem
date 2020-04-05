@@ -2,6 +2,7 @@ package com.jdbc.dao;
 
 import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Developer;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.util.List;
 public class DeveloperDAO extends DataAccessObject<Developer> {
 
     private Connection connection;
+    private SessionFactory sessionFactory;
 
     private static final String INSERT = "INSERT INTO developers(first_name, last_name, gender, age, salary) " +
                                          "VALUES(?, ?, ?, ?, ?);";
@@ -38,8 +40,9 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
     private static String getDeveloperSkillLink = "SELECT * FROM developer_skill " +
                                                   "WHERE developer_id = ? AND skill_id = ?;";
 
-    public DeveloperDAO(Connection connection) {
+    public DeveloperDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
+        this.sessionFactory = sessionFactory;
     }
 
     @Override

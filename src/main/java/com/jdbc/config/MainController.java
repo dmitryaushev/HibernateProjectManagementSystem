@@ -2,6 +2,7 @@ package com.jdbc.config;
 
 import com.jdbc.dao.*;
 import com.jdbc.service.*;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ public class MainController {
     private View view;
     private DatabaseManagerConnector dbConnector;
     private Connection connection;
+    private SessionFactory sessionFactory;
     private List<Command> commands;
 
     private CompanyDAO companyDAO;
@@ -28,11 +30,14 @@ public class MainController {
         dbConnector = new DatabaseManagerConnector("localhost", 5432, "it");
         connection = dbConnector.getConnection();
 
-        companyDAO = new CompanyDAO(connection);
-        customerDAO = new CustomerDAO(connection);
-        developerDAO = new DeveloperDAO(connection);
-        projectDAO = new ProjectDAO(connection);
-        skillDAO = new SkillDAO(connection);
+        HibernateDatabaseConnector.init();
+        sessionFactory = HibernateDatabaseConnector.getSessionFactory();
+
+        companyDAO = new CompanyDAO(connection, sessionFactory);
+        customerDAO = new CustomerDAO(connection, sessionFactory);
+        developerDAO = new DeveloperDAO(connection, sessionFactory);
+        projectDAO = new ProjectDAO(connection, sessionFactory);
+        skillDAO = new SkillDAO(connection, sessionFactory);
 
         commands = Arrays.asList(
                 new CreateCompany(view, companyDAO),
