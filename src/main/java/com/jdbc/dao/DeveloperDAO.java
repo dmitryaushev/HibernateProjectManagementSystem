@@ -2,7 +2,10 @@ package com.jdbc.dao;
 
 import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Developer;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,16 +18,6 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
 
     private Connection connection;
     private SessionFactory sessionFactory;
-
-    private static final String INSERT = "INSERT INTO developers(first_name, last_name, gender, age, salary) " +
-                                         "VALUES(?, ?, ?, ?, ?);";
-    private static final String SELECT = "SELECT * FROM developers WHERE developer_id = ?";
-    private static final String SELECT_ALL = "SELECT * FROM developers;";
-    private static final String UPDATE =
-            "UPDATE developers " +
-            "SET first_name = ?, last_name = ?, gender = ?, age = ?, salary = ? " +
-            "WHERE developer_id = ?;";
-    private static final String DELETE = "DELETE FROM developers WHERE developer_id = ?;";
 
     private static String getAllDevelopersByDepartment;
     private static String getAllDevelopersByLevel;
@@ -48,40 +41,35 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
     @Override
     public void create(Developer developer) {
 
-        try(PreparedStatement statement = connection.prepareStatement(INSERT)) {
+        Session session = null;
+        Transaction transaction;
 
-            statement.setString(1, developer.getFirstName());
-            statement.setString(2, developer.getLastName());
-            statement.setString(3, developer.getGender());
-            statement.setInt(4, developer.getAge());
-            statement.setInt(5, developer.getSalary());
-            statement.execute();
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.save(developer);
+            transaction.commit();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
-
     }
 
     @Override
     public Developer getByID(int id) {
 
+        Session session = null;
         Developer developer = new Developer();
 
-        try (PreparedStatement statement = connection.prepareStatement(SELECT)){
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                developer.setDeveloperID(id);
-                developer.setFirstName(resultSet.getString("first_name"));
-                developer.setLastName(resultSet.getString("last_name"));
-                developer.setGender(resultSet.getString("gender"));
-                developer.setAge(resultSet.getInt("age"));
-                developer.setSalary(resultSet.getInt("salary"));
-            } else
-                return null;
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            developer = (Developer) session.createQuery("from Developer d where d.id=:id")
+                    .setParameter("id", id).getSingleResult();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
         return developer;
     }
@@ -89,54 +77,52 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
     @Override
     public List<Developer> getAll() {
 
-        List<Developer> developersList = new ArrayList<>();
+        Session session = null;
+        List<Developer> developers = new ArrayList<>();
 
-        try(PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-
-                Developer developer = new Developer();
-                developer.setDeveloperID(resultSet.getInt("developer_id"));
-                developer.setFirstName(resultSet.getString("first_name"));
-                developer.setLastName(resultSet.getString("last_name"));
-                developer.setGender(resultSet.getString("gender"));
-                developer.setAge(resultSet.getInt("age"));
-                developer.setSalary(resultSet.getInt("salary"));
-
-                developersList.add(developer);
-            }
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            developers = session.createQuery("from Developer").list();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
-        return developersList;
+        return developers;
     }
 
     @Override
     public void update(Developer developer) {
 
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE)) {
+        Session session = null;
+        Transaction transaction;
 
-            statement.setString(1, developer.getFirstName());
-            statement.setString(2, developer.getLastName());
-            statement.setString(3, developer.getGender());
-            statement.setInt(4, developer.getAge());
-            statement.setInt(5, developer.getSalary());
-            statement.setInt(6, developer.getDeveloperID());
-            statement.execute();
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.update(developer);
+            transaction.commit();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Developer developer) {
 
-        try(PreparedStatement statement = connection.prepareStatement(DELETE)) {
-            statement.setInt(1, id);
-            statement.execute();
-        } catch (SQLException e) {
+        Session session = null;
+        Transaction transaction;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.delete(developer);
+            transaction.commit();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
     }
 
@@ -280,5 +266,10 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
         }
 
         return result;
+    }
+
+    private void closeSession(Session session) {
+        if (session != null)
+            session.close();
     }
 }
