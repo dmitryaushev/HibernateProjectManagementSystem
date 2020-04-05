@@ -11,5 +11,6 @@
         <property name="connection.username">postgres</property>
         <property name="connection.password">admin</property>
 
+        <mapping resource="company.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
