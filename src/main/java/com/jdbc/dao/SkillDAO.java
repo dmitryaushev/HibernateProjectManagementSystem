@@ -1,6 +1,8 @@
 package com.jdbc.dao;
 
 import com.jdbc.model.Skill;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
@@ -26,47 +28,41 @@ public class SkillDAO {
 
     public List<Skill> getAll() {
 
-        List<Skill> skillsList = new ArrayList<>();
+        Session session = null;
+        List<Skill> skills = new ArrayList<>();
 
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-
-                Skill skill = new Skill();
-                skill.setSkillID(resultSet.getInt("skill_id"));
-                skill.setDepartment(resultSet.getString("department"));
-                skill.setLevel(resultSet.getString("level"));
-
-                skillsList.add(skill);
-            }
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            skills = session.createQuery("from Skill").list();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
 
-        return skillsList;
+        return skills;
     }
 
     public Skill get(String department, String level) {
 
+        Session session = null;
         Skill skill = new Skill();
 
-        try (PreparedStatement statement = connection.prepareStatement(SELECT)) {
-            statement.setString(1, department);
-            statement.setString(2, level);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                skill.setSkillID(resultSet.getInt("skill_id"));
-                skill.setDepartment(resultSet.getString("department"));
-                skill.setLevel(resultSet.getString("level"));
-            } else
-                return null;
-
-        } catch (SQLException e) {
+        try {
+            session = sessionFactory.openSession();
+            skill = (Skill) session.createQuery("from Skill s where s.department=:department and s.level=:level")
+                    .setParameter("department", department).setParameter("level", level).getSingleResult();
+        } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            closeSession(session);
         }
 
         return skill;
+    }
+
+    private void closeSession(Session session) {
+        if (session != null)
+            session.close();
     }
 }

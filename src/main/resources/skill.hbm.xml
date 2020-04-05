@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jdbc.model.Skill" table="skills" catalog="it" schema="public">
+        <id name="skillID" type="java.lang.Integer">
+            <column name="skill_id"/>
+            <generator class="increment">
+                <param name="sequence">skills_skill_id_seq</param>
+            </generator>
+        </id>
+        <property name="department" type="java.lang.String">
+            <column name="department"/>
+        </property>
+        <property name="level" type="java.lang.String">
+            <column name="level"/>
+        </property>
+    </class>
+</hibernate-mapping>
