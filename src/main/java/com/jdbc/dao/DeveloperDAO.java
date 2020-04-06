@@ -1,6 +1,5 @@
 package com.jdbc.dao;
 
-import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Developer;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeveloperDAO extends DataAccessObject<Developer> {
+public class DeveloperDAO implements DataAccessObject<Developer> {
 
     private Connection connection;
     private SessionFactory sessionFactory;
@@ -23,15 +22,15 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
     private static String getAllDevelopersByLevel;
 
     private static String linkDeveloperProject = "INSERT INTO developer_project(developer_id, project_id) " +
-                                                 "VALUES(?, ?);";
+            "VALUES(?, ?);";
     private static String linkDeveloperSkill = "INSERT INTO developer_skill(developer_id, skill_id) " +
-                                               "VALUES(?, ?);";
+            "VALUES(?, ?);";
     private static String unlinkDeveloperProject = "DELETE FROM developer_project WHERE developer_id = ?;";
     private static String unlinkDeveloperSkill = "DELETE FROM developer_skill WHERE developer_id = ?;";
     private static String getDeveloperProjectLink = "SELECT * FROM developer_project " +
-                                                    "WHERE developer_id = ? AND project_id = ?;";
+            "WHERE developer_id = ? AND project_id = ?;";
     private static String getDeveloperSkillLink = "SELECT * FROM developer_skill " +
-                                                  "WHERE developer_id = ? AND skill_id = ?;";
+            "WHERE developer_id = ? AND skill_id = ?;";
 
     public DeveloperDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
@@ -41,88 +40,57 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
     @Override
     public void create(Developer developer) {
 
-        Session session = null;
-        Transaction transaction;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.save(developer);
             transaction.commit();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
     }
 
     @Override
     public Developer getByID(int id) {
 
-        Session session = null;
-        Developer developer = new Developer();
-
-        try {
-            session = sessionFactory.openSession();
-            developer = (Developer) session.createQuery("from Developer d where d.id=:id")
-                    .setParameter("id", id).getSingleResult();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Developer d where d.id=:id", Developer.class)
+                    .setParameter("id", id).uniqueResult();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
-        return developer;
     }
 
     @Override
     public List<Developer> getAll() {
 
-        Session session = null;
-        List<Developer> developers = new ArrayList<>();
-
-        try {
-            session = sessionFactory.openSession();
-            developers = session.createQuery("from Developer").list();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Developer").list();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
-        return developers;
     }
 
     @Override
     public void update(Developer developer) {
 
-        Session session = null;
-        Transaction transaction;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.update(developer);
             transaction.commit();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
     }
 
     @Override
     public void delete(Developer developer) {
 
-        Session session = null;
-        Transaction transaction;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.delete(developer);
             transaction.commit();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
     }
 
@@ -130,13 +98,13 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
 
         getAllDevelopersByDepartment =
                 "SELECT d.developer_id, d.first_name, d.last_name, d.gender, d.age, d.salary\n" +
-                "FROM developers d\n" +
-                "JOIN developer_skill ds ON d.developer_id = ds.developer_id\n" +
-                "JOIN skills s ON ds.skill_id = s.skill_id\n" +
-                "WHERE s.department = ?;";
+                        "FROM developers d\n" +
+                        "JOIN developer_skill ds ON d.developer_id = ds.developer_id\n" +
+                        "JOIN skills s ON ds.skill_id = s.skill_id\n" +
+                        "WHERE s.department = ?;";
         List<Developer> developersList = new ArrayList<>();
 
-        try(PreparedStatement statement = connection.prepareStatement(getAllDevelopersByDepartment)) {
+        try (PreparedStatement statement = connection.prepareStatement(getAllDevelopersByDepartment)) {
             statement.setString(1, department);
 
             ResultSet resultSet = statement.executeQuery();
@@ -153,7 +121,7 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
                 developersList.add(developer);
             }
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return developersList;
@@ -163,14 +131,14 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
 
         getAllDevelopersByLevel =
                 "SELECT d.developer_id, d.first_name, d.last_name, d.gender, d.age, d.salary\n" +
-                "FROM developers d\n" +
-                "JOIN developer_skill ds ON d.developer_id = ds.developer_id\n" +
-                "JOIN skills s ON ds.skill_id = s.skill_id\n" +
-                "WHERE s.level = ?" +
-                "GROUP BY d.developer_id;";
+                        "FROM developers d\n" +
+                        "JOIN developer_skill ds ON d.developer_id = ds.developer_id\n" +
+                        "JOIN skills s ON ds.skill_id = s.skill_id\n" +
+                        "WHERE s.level = ?" +
+                        "GROUP BY d.developer_id;";
         List<Developer> developersList = new ArrayList<>();
 
-        try(PreparedStatement statement = connection.prepareStatement(getAllDevelopersByLevel)) {
+        try (PreparedStatement statement = connection.prepareStatement(getAllDevelopersByLevel)) {
             statement.setString(1, level);
 
             ResultSet resultSet = statement.executeQuery();
@@ -187,7 +155,7 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
                 developersList.add(developer);
             }
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return developersList;
@@ -246,7 +214,7 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
             statement.setInt(1, developerID);
             statement.setInt(2, projectID);
             ResultSet resultSet = statement.executeQuery();
-            result =  resultSet.next();
+            result = resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -266,10 +234,5 @@ public class DeveloperDAO extends DataAccessObject<Developer> {
         }
 
         return result;
-    }
-
-    private void closeSession(Session session) {
-        if (session != null)
-            session.close();
     }
 }

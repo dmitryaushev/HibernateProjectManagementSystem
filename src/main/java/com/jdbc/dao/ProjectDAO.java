@@ -1,6 +1,5 @@
 package com.jdbc.dao;
 
-import com.jdbc.config.DataAccessObject;
 import com.jdbc.model.Developer;
 import com.jdbc.model.Project;
 import org.hibernate.HibernateException;
@@ -12,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDAO extends DataAccessObject<Project> {
+public class ProjectDAO implements DataAccessObject<Project> {
 
     private Connection connection;
     private SessionFactory sessionFactory;
@@ -22,17 +21,17 @@ public class ProjectDAO extends DataAccessObject<Project> {
     private static String getAllProjectsWithDevelopers;
 
     private static String linkCustomerProject = "INSERT INTO customer_project (customer_id, project_id) " +
-                                                "VALUES(?, ?)";
+            "VALUES(?, ?)";
     private static String linkCompanyProject = "INSERT INTO company_project (company_id, project_id) " +
-                                               "VALUES(?, ?)";
+            "VALUES(?, ?)";
 
     private static String unlinkCustomerProject = "DELETE FROM customer_project WHERE project_id = ?;";
     private static String unlinkCompanyProject = "DELETE FROM company_project WHERE project_id = ?;";
     private static String unlinkDeveloperProject = "DELETE FROM developer_project WHERE project_id = ?;";
     private static String getCompanyProjectLink = "SELECT * FROM company_project " +
-                                                  "WHERE company_id = ? AND project_id = ?;";
+            "WHERE company_id = ? AND project_id = ?;";
     private static String getCustomerProjectLink = "SELECT * FROM customer_project " +
-                                                   "WHERE customer_id = ? AND project_id = ?;";
+            "WHERE customer_id = ? AND project_id = ?;";
 
     public ProjectDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
@@ -42,88 +41,57 @@ public class ProjectDAO extends DataAccessObject<Project> {
     @Override
     public void create(Project project) {
 
-        Session session = null;
-        Transaction transaction;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.save(project);
             transaction.commit();
-        } catch (HibernateException e){
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+        } catch (HibernateException e) {
+            throw new HibernateException(e);
         }
     }
 
     @Override
     public Project getByID(int id) {
 
-        Session session = null;
-        Project project = new Project();
-
-        try {
-            session = sessionFactory.openSession();
-            project = (Project) session.createQuery("from Project p where p.id=:id")
-                    .setParameter("id", id).getSingleResult();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Project p where p.id=:id", Project.class)
+                    .setParameter("id", id).uniqueResult();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
-        return project;
     }
 
     @Override
     public List<Project> getAll() {
 
-        Session session = null;
-        List<Project> projects = new ArrayList<>();
-
-        try {
-            session = sessionFactory.openSession();
-            projects = session.createQuery("from Project").list();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Project").list();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
-        return projects;
     }
 
     @Override
     public void update(Project project) {
 
-        Session session = null;
-        Transaction transaction;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.update(project);
             transaction.commit();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
     }
 
     @Override
     public void delete(Project project) {
 
-        Session session = null;
-        Transaction transaction;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.delete(project);
             transaction.commit();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            closeSession(session);
+            throw new HibernateException(e);
         }
     }
 
@@ -131,10 +99,10 @@ public class ProjectDAO extends DataAccessObject<Project> {
 
         getSumSalaryByProject =
                 "SELECT sum(salary)\n" +
-                "FROM developers d\n" +
-                "JOIN developer_project dp ON d.developer_id = dp.developer_id\n" +
-                "JOIN projects p ON dp.project_id = p.project_id\n" +
-                "WHERE p.project_id = ?;";
+                        "FROM developers d\n" +
+                        "JOIN developer_project dp ON d.developer_id = dp.developer_id\n" +
+                        "JOIN projects p ON dp.project_id = p.project_id\n" +
+                        "WHERE p.project_id = ?;";
         int sum = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(getSumSalaryByProject)) {
@@ -154,10 +122,10 @@ public class ProjectDAO extends DataAccessObject<Project> {
 
         getAllDevelopersByProject =
                 "SELECT d.developer_id, d.first_name, d.last_name, d.gender, d.age, d.salary\n" +
-                "FROM developers d\n" +
-                "JOIN developer_project dp ON d.developer_id = dp.developer_id\n" +
-                "JOIN projects p ON dp.project_id = p.project_id\n" +
-                "WHERE p.project_id = ?;";
+                        "FROM developers d\n" +
+                        "JOIN developer_project dp ON d.developer_id = dp.developer_id\n" +
+                        "JOIN projects p ON dp.project_id = p.project_id\n" +
+                        "WHERE p.project_id = ?;";
 
         List<Developer> developersList = new ArrayList<>();
 
@@ -188,11 +156,11 @@ public class ProjectDAO extends DataAccessObject<Project> {
 
         getAllProjectsWithDevelopers =
                 "SELECT p.date, p.project_name, count(d) AS amount\n" +
-                "FROM projects p \n" +
-                "JOIN developer_project dp ON p.project_id = dp.project_id\n" +
-                "JOIN developers d ON dp.developer_id = d.developer_id\n" +
-                "GROUP BY p.date, p.project_name\n" +
-                "ORDER BY amount DESC;";
+                        "FROM projects p \n" +
+                        "JOIN developer_project dp ON p.project_id = dp.project_id\n" +
+                        "JOIN developers d ON dp.developer_id = d.developer_id\n" +
+                        "GROUP BY p.date, p.project_name\n" +
+                        "ORDER BY amount DESC;";
         List<String> projectsList = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(getAllProjectsWithDevelopers)) {
@@ -298,10 +266,5 @@ public class ProjectDAO extends DataAccessObject<Project> {
             e.printStackTrace();
         }
         return result;
-    }
-
-    private void closeSession(Session session) {
-        if (session != null)
-            session.close();
     }
 }
