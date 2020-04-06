@@ -50,7 +50,7 @@ public class CustomerDAO implements DataAccessObject<Customer> {
     public List<Customer> getAll() {
 
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Customer ").list();
+            return session.createQuery("from Customer ", Customer.class).list();
         } catch (HibernateException e) {
             throw new HibernateException(e);
         }

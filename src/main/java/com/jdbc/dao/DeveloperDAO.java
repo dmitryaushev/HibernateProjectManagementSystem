@@ -64,7 +64,7 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
     public List<Developer> getAll() {
 
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Developer").list();
+            return session.createQuery("from Developer", Developer.class).list();
         } catch (HibernateException e) {
             throw new HibernateException(e);
         }

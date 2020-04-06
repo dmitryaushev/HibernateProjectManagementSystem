@@ -65,7 +65,7 @@ public class ProjectDAO implements DataAccessObject<Project> {
     public List<Project> getAll() {
 
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Project").list();
+            return session.createQuery("from Project", Project.class).list();
         } catch (HibernateException e) {
             throw new HibernateException(e);
         }
