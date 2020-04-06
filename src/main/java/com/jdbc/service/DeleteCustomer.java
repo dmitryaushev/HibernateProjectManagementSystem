@@ -27,8 +27,9 @@ public class DeleteCustomer implements Command {
         int customerID = Integer.parseInt(view.read());
         Customer customer = customerDAO.getByID(customerID);
 
-        if (customer == null)
+        if (customer == null) {
             throw new IllegalArgumentException(String.format("Customer with id %d not exist", customerID));
+        }
 
         view.write("Delete customer? Y|N");
         view.write(customer.toString());

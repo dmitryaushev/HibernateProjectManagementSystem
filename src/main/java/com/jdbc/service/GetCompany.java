@@ -29,8 +29,9 @@ public class GetCompany implements Command {
         view.write("Enter a company id");
         int companyID = Integer.parseInt(view.read());
 
-        if (companyDAO.getByID(companyID) == null)
+        if (companyDAO.getByID(companyID) == null) {
             throw new IllegalArgumentException(String.format("Company with id %d not exist", companyID));
+        }
 
         view.write(companyDAO.getByID(companyID).toString());
         sleep();

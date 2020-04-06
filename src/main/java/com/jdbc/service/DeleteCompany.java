@@ -27,8 +27,9 @@ public class DeleteCompany implements Command {
         int companyID = Integer.parseInt(view.read());
         Company company = companyDAO.getByID(companyID);
 
-        if (company == null)
+        if (company == null) {
             throw new IllegalArgumentException(String.format("Company with id %d not exist", companyID));
+        }
 
         view.write("Delete company? Y|N");
         view.write(company.toString());

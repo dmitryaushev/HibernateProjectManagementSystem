@@ -34,23 +34,25 @@ public class LinkProjectToCompany implements Command {
         int projectID = Integer.parseInt(view.read());
         Project project = projectDAO.getByID(projectID);
 
-        if (project == null)
+        if (project == null) {
             throw new IllegalArgumentException(String.format("Project with id %d not exist", projectID));
+        }
 
         view.write("Enter a company id");
         int companyID = Integer.parseInt(view.read());
         Company company = companyDAO.getByID(companyID);
 
-        if (company == null)
+        if (company == null) {
             throw new IllegalArgumentException(String.format("Company with id %d not exist", companyID));
+        }
 
         String projectName = projectDAO.getByID(projectID).getProjectName();
         String companyName = companyDAO.getByID(companyID).getCompanyName();
 
-        if (projectDAO.checkCompanyProjectLink(companyID, projectID))
+        if (projectDAO.checkCompanyProjectLink(companyID, projectID)) {
             throw new UnsupportedOperationException(String.format(
-                    "Project %s already developing by company %s", projectName, companyName
-            ));
+                    "Project %s already developing by company %s", projectName, companyName));
+        }
 
         view.write(String.format("Connect a project %s with a company %s? Y|N", projectName, companyName));
         question(view.read());

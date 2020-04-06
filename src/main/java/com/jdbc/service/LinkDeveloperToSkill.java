@@ -35,8 +35,9 @@ public class LinkDeveloperToSkill implements Command {
         int developerID = Integer.parseInt(view.read());
         Developer developer = developerDAO.getByID(developerID);
 
-        if (developer == null)
+        if (developer == null) {
             throw new IllegalArgumentException(String.format("Developer with id %d not exist", developerID));
+        }
 
         Set<String> departmentsSet = skillDAO.getAll()
                 .stream()
@@ -66,10 +67,10 @@ public class LinkDeveloperToSkill implements Command {
         String firstName = developer.getFirstName();
         String lastName = developer.getLastName();
 
-        if (developerDAO.checkDeveloperSkillLink(developerID, skillID))
+        if (developerDAO.checkDeveloperSkillLink(developerID, skillID)) {
             throw new UnsupportedOperationException(String.format(
-                    "%s %s already %s %s developer", firstName, lastName, department, level
-            ));
+                    "%s %s already %s %s developer", firstName, lastName, department, level));
+        }
 
         view.write(String.format("%s %s is %s %s developer? Y|N", firstName, lastName, department, level));
         question(view.read());

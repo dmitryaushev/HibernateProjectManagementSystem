@@ -79,8 +79,9 @@ public class MainController {
             view.write("\nChoose a command. Q to exit\n");
             commands.forEach(x -> view.write(x.command()));
             String input = view.read();
-            if (input.equalsIgnoreCase("Q"))
+            if (input.equalsIgnoreCase("Q")) {
                 break;
+            }
             doCommand(input);
         }
     }

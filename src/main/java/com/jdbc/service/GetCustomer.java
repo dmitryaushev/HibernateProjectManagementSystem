@@ -29,8 +29,9 @@ public class GetCustomer implements Command {
         view.write("Enter a customer id");
         int customerID = Integer.parseInt(view.read());
 
-        if (customerDAO.getByID(customerID) == null)
+        if (customerDAO.getByID(customerID) == null) {
             throw new IllegalArgumentException(String.format("Customer with id %d not exist", customerID));
+        }
 
         view.write(customerDAO.getByID(customerID).toString());
         sleep();

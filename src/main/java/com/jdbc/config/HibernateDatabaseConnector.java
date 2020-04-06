@@ -23,8 +23,9 @@ public class HibernateDatabaseConnector {
     }
 
     public static synchronized void destroy() {
-        if (sessionFactory != null)
+        if (sessionFactory != null) {
             sessionFactory.close();
+        }
     }
 
     public static SessionFactory getSessionFactory() {

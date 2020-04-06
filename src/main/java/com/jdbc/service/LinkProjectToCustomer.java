@@ -34,23 +34,25 @@ public class LinkProjectToCustomer implements Command {
         int projectID = Integer.parseInt(view.read());
         Project project = projectDAO.getByID(projectID);
 
-        if (project == null)
+        if (project == null) {
             throw new IllegalArgumentException(String.format("Project with id %d not exist", projectID));
+        }
 
         view.write("Enter a customer id");
         int customerID = Integer.parseInt(view.read());
         Customer customer = customerDAO.getByID(customerID);
 
-        if (customer == null)
+        if (customer == null) {
             throw new IllegalArgumentException(String.format("Customer with id %d not exist", customerID));
+        }
 
         String projectName = projectDAO.getByID(projectID).getProjectName();
         String customerName = customerDAO.getByID(customerID).getCustomerName();
 
-        if (projectDAO.checkCustomerProjectLink(customerID, projectID))
+        if (projectDAO.checkCustomerProjectLink(customerID, projectID)) {
             throw new UnsupportedOperationException(String.format(
-                    "Customer %s already owns project %s", customerName, projectName
-            ));
+                    "Customer %s already owns project %s", customerName, projectName));
+        }
 
         view.write(String.format("Connect a project %s with a customer %s? Y|N", projectName, customerName));
         question(view.read());

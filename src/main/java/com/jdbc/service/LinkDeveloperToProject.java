@@ -31,24 +31,26 @@ public class LinkDeveloperToProject implements Command {
         int developerID = Integer.parseInt(view.read());
         Developer developer = developerDAO.getByID(developerID);
 
-        if (developer == null)
+        if (developer == null) {
             throw new IllegalArgumentException(String.format("Developer with id %d not exist", developerID));
+        }
 
         view.write("Enter a project id");
         int projectID = Integer.parseInt(view.read());
         Project project = projectDAO.getByID(projectID);
 
-        if (project == null)
+        if (project == null) {
             throw new IllegalArgumentException(String.format("Project with id %d not exist", projectID));
+        }
 
         String firstName = developer.getFirstName();
         String lastName = developer.getLastName();
         String projectName = project.getProjectName();
 
-        if (developerDAO.checkDeveloperProjectLink(developerID, projectID))
+        if (developerDAO.checkDeveloperProjectLink(developerID, projectID)) {
             throw new UnsupportedOperationException(String.format(
-                    "Developer %s %s already developing a project %s", firstName, lastName, projectName
-            ));
+                    "Developer %s %s already developing a project %s", firstName, lastName, projectName));
+        }
 
         view.write(String.format("Connect %s %s with a project %s? Y|N", firstName, lastName, projectName));
         question(view.read());

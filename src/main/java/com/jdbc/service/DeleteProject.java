@@ -27,8 +27,9 @@ public class DeleteProject implements Command {
         int projectID = Integer.parseInt(view.read());
         Project project = projectDAO.getByID(projectID);
 
-        if (project == null)
+        if (project == null) {
             throw new IllegalArgumentException(String.format("Project with id %d not exist", projectID));
+        }
 
         view.write("Delete project? Y|N");
         view.write(project.toString());

@@ -29,8 +29,9 @@ public class GetDeveloper implements Command {
         view.write("Enter a developer id");
         int developerID = Integer.parseInt(view.read());
 
-        if (developerDAO.getByID(developerID) == null)
+        if (developerDAO.getByID(developerID) == null) {
             throw new IllegalArgumentException(String.format("Developer with id %d not exist", developerID));
+        }
 
         view.write(developerDAO.getByID(developerID).toString());
         sleep();

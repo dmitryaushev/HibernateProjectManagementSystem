@@ -30,8 +30,9 @@ public class UpdateDeveloper implements Command {
         int developerID = Integer.parseInt(view.read());
         Developer developer = developerDAO.getByID(developerID);
 
-        if (developer == null)
+        if (developer == null) {
             throw new IllegalArgumentException(String.format("Developer with id %d not exist", developerID));
+        }
 
         view.write("Update developer? Y|N");
         view.write(developer.toString());

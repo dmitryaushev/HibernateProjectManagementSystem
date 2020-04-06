@@ -39,7 +39,7 @@ public class GetAllDevelopersByDepartment implements Command {
             view.write("Choose skill department");
             departmentsSet.forEach(System.out::println);
             department = view.read();
-        }while (!matchString(department, departmentsSet));
+        } while (!matchString(department, departmentsSet));
 
         developerDAO.getAllDevelopersByDepartment(department).forEach(System.out::println);
         sleep();

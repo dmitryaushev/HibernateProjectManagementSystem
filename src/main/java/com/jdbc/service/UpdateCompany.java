@@ -30,8 +30,9 @@ public class UpdateCompany implements Command {
         int companyID = Integer.parseInt(view.read());
         Company company = companyDAO.getByID(companyID);
 
-        if (company == null)
+        if (company == null) {
             throw new IllegalArgumentException(String.format("Company with id %d not exist", companyID));
+        }
 
         view.write("Update company? Y|N");
         view.write(company.toString());

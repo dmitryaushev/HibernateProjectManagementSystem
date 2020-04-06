@@ -29,8 +29,9 @@ public class GetProject implements Command {
         view.write("Enter a project id");
         int projectID = Integer.parseInt(view.read());
 
-        if (projectDAO.getByID(projectID) == null)
+        if (projectDAO.getByID(projectID) == null) {
             throw new IllegalArgumentException(String.format("Project with id %d not exist", projectID));
+        }
 
         view.write(projectDAO.getByID(projectID).toString());
         sleep();
