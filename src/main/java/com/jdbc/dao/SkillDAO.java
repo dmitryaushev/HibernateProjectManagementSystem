@@ -21,7 +21,7 @@ public class SkillDAO {
     public List<Skill> getAll() {
 
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Skill").list();
+            return session.createQuery("from Skill", Skill.class).list();
         } catch (HibernateException e) {
             throw new HibernateException(e);
         }
