@@ -40,11 +40,13 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
     @Override
     public void create(Developer developer) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(developer);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -73,11 +75,13 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
     @Override
     public void update(Developer developer) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.update(developer);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -85,11 +89,13 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
     @Override
     public void delete(Developer developer) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.delete(developer);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -234,5 +240,11 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
         }
 
         return result;
+    }
+
+    private void transactionRollback(Transaction transaction) {
+        if (transaction != null) {
+            transaction.rollback();
+        }
     }
 }

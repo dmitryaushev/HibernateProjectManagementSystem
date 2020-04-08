@@ -26,11 +26,13 @@ public class CustomerDAO implements DataAccessObject<Customer> {
     @Override
     public void create(Customer customer) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(customer);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -59,11 +61,13 @@ public class CustomerDAO implements DataAccessObject<Customer> {
     @Override
     public void update(Customer customer) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.update(customer);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -71,11 +75,13 @@ public class CustomerDAO implements DataAccessObject<Customer> {
     @Override
     public void delete(Customer customer) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.delete(customer);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -88,6 +94,12 @@ public class CustomerDAO implements DataAccessObject<Customer> {
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void transactionRollback(Transaction transaction) {
+        if (transaction != null) {
+            transaction.rollback();
         }
     }
 }

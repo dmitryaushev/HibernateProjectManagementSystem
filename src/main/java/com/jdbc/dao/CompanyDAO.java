@@ -26,11 +26,13 @@ public class CompanyDAO implements DataAccessObject<Company> {
     @Override
     public void create(Company company) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.save(company);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -59,11 +61,13 @@ public class CompanyDAO implements DataAccessObject<Company> {
     @Override
     public void update(Company company) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.update(company);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -71,11 +75,13 @@ public class CompanyDAO implements DataAccessObject<Company> {
     @Override
     public void delete(Company company) {
 
+        Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.delete(company);
             transaction.commit();
         } catch (HibernateException e) {
+            transactionRollback(transaction);
             throw new HibernateException(e);
         }
     }
@@ -88,6 +94,12 @@ public class CompanyDAO implements DataAccessObject<Company> {
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void transactionRollback(Transaction transaction) {
+        if (transaction != null) {
+            transaction.rollback();
         }
     }
 }
