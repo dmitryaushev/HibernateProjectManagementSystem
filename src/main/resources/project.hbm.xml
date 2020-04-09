@@ -21,5 +21,11 @@
         <property name="date" type="java.sql.Date">
             <column name="date"/>
         </property>
+        <bag name="developers" table="developer_project" lazy="false">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <many-to-many column="developer_id" class="com.jdbc.model.Developer"/>
+        </bag>
     </class>
 </hibernate-mapping>

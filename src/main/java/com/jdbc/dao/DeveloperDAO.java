@@ -6,25 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class DeveloperDAO implements DataAccessObject<Developer> {
 
-    private Connection connection;
     private SessionFactory sessionFactory;
 
-    private static String linkDeveloperProject = "INSERT INTO developer_project(developer_id, project_id) " +
-            "VALUES(?, ?);";
-    private static String unlinkDeveloperProject = "DELETE FROM developer_project WHERE developer_id = ?;";
-    private static String getDeveloperProjectLink = "SELECT * FROM developer_project " +
-            "WHERE developer_id = ? AND project_id = ?;";
-
-    public DeveloperDAO(Connection connection, SessionFactory sessionFactory) {
-        this.connection = connection;
+    public DeveloperDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -116,43 +104,6 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
         } catch (HibernateException e) {
             throw new HibernateException(e);
         }
-    }
-
-    public void linkDeveloperProject(int developerID, int projectId) {
-
-        try (PreparedStatement statement = connection.prepareStatement(linkDeveloperProject)) {
-
-            statement.setInt(1, developerID);
-            statement.setInt(2, projectId);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void unlinkDeveloperProject(int developerID) {
-
-        try (PreparedStatement statement = connection.prepareStatement(unlinkDeveloperProject)) {
-
-            statement.setInt(1, developerID);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean checkDeveloperProjectLink(int developerID, int projectID) {
-
-        boolean result = false;
-        try (PreparedStatement statement = connection.prepareStatement(getDeveloperProjectLink)) {
-            statement.setInt(1, developerID);
-            statement.setInt(2, projectID);
-            ResultSet resultSet = statement.executeQuery();
-            result = resultSet.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     private void transactionRollback(Transaction transaction) {

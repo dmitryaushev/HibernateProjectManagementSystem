@@ -35,7 +35,7 @@ public class MainController {
 
         companyDAO = new CompanyDAO(connection, sessionFactory);
         customerDAO = new CustomerDAO(connection, sessionFactory);
-        developerDAO = new DeveloperDAO(connection, sessionFactory);
+        developerDAO = new DeveloperDAO(sessionFactory);
         projectDAO = new ProjectDAO(connection, sessionFactory);
         skillDAO = new SkillDAO(connection, sessionFactory);
 

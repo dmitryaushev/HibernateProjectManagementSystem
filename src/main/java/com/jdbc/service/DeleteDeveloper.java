@@ -35,7 +35,6 @@ public class DeleteDeveloper implements Command {
         view.write(developer.toString());
         question(view.read());
 
-        developerDAO.unlinkDeveloperProject(developerID);
         developerDAO.delete(developer);
         view.write("Developer deleted");
         sleep();

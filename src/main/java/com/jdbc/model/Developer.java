@@ -11,6 +11,7 @@ public class Developer {
     private int age;
     private int salary;
     private List<Skill> skills;
+    private List<Project> projects;
 
 
     public int getDeveloperID() {
@@ -67,6 +68,14 @@ public class Developer {
 
     public void setSkills(List<Skill> skills) {
         this.skills = skills;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     @Override

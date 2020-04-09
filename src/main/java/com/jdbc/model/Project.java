@@ -1,6 +1,7 @@
 package com.jdbc.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Project {
 
@@ -9,6 +10,7 @@ public class Project {
     private String status;
     private int cost;
     private Date date;
+    private List<Developer> developers;
 
     public Date getDate() {
         return date;
@@ -48,6 +50,14 @@ public class Project {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public List<Developer> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(List<Developer> developers) {
+        this.developers = developers;
     }
 
     @Override

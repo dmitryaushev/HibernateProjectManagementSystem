@@ -7,6 +7,8 @@ import com.jdbc.dao.ProjectDAO;
 import com.jdbc.model.Developer;
 import com.jdbc.model.Project;
 
+import java.util.List;
+
 public class LinkDeveloperToProject implements Command {
 
     private View view;
@@ -47,15 +49,20 @@ public class LinkDeveloperToProject implements Command {
         String lastName = developer.getLastName();
         String projectName = project.getProjectName();
 
-        if (developerDAO.checkDeveloperProjectLink(developerID, projectID)) {
-            throw new UnsupportedOperationException(String.format(
-                    "Developer %s %s already developing a project %s", firstName, lastName, projectName));
+        List<Project> projects = developer.getProjects();
+        for (Project p : projects) {
+            if (p.getProjectID() == projectID) {
+                throw new UnsupportedOperationException(String.format(
+                        "Developer %s %s already developing a project %s", firstName, lastName, projectName));
+            }
         }
 
         view.write(String.format("Connect %s %s with a project %s? Y|N", firstName, lastName, projectName));
         question(view.read());
 
-        developerDAO.linkDeveloperProject(developerID, projectID);
+        projects.add(project);
+        developer.setProjects(projects);
+        developerDAO.update(developer);
         view.write("Successful");
         sleep();
     }
