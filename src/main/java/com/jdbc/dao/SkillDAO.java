@@ -5,16 +5,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import java.sql.Connection;
 import java.util.List;
 
 public class SkillDAO {
 
-    private Connection connection;
     private SessionFactory sessionFactory;
 
-    public SkillDAO(Connection connection, SessionFactory sessionFactory) {
-        this.connection = connection;
+    public SkillDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

@@ -37,7 +37,7 @@ public class MainController {
         customerDAO = new CustomerDAO(connection, sessionFactory);
         developerDAO = new DeveloperDAO(sessionFactory);
         projectDAO = new ProjectDAO(connection, sessionFactory);
-        skillDAO = new SkillDAO(connection, sessionFactory);
+        skillDAO = new SkillDAO(sessionFactory);
 
         commands = Arrays.asList(
                 new CreateCompany(view, companyDAO),
