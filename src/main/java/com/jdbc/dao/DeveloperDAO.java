@@ -130,19 +130,6 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
         }
     }
 
-    public void linkDeveloperSkill(Developer developer) {
-
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.update(developer);
-            transaction.commit();
-        } catch (HibernateException e) {
-            transactionRollback(transaction);
-            throw new HibernateException(e);
-        }
-    }
-
     public void unlinkDeveloperProject(int developerID) {
 
         try (PreparedStatement statement = connection.prepareStatement(unlinkDeveloperProject)) {

@@ -80,7 +80,7 @@ public class LinkDeveloperToSkill implements Command {
         skills.add(skill);
         developer.setSkills(skills);
 
-        developerDAO.linkDeveloperSkill(developer);
+        developerDAO.update(developer);
         view.write("Successful");
         sleep();
     }
