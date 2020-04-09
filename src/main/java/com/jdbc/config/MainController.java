@@ -4,16 +4,12 @@ import com.jdbc.dao.*;
 import com.jdbc.service.*;
 import org.hibernate.SessionFactory;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainController {
 
     private View view;
-    private DatabaseManagerConnector dbConnector;
-    private Connection connection;
     private SessionFactory sessionFactory;
     private List<Command> commands;
 
@@ -23,12 +19,9 @@ public class MainController {
     private ProjectDAO projectDAO;
     private SkillDAO skillDAO;
 
-    public MainController() throws SQLException {
+    public MainController() {
 
         view = new Console();
-
-        dbConnector = new DatabaseManagerConnector("localhost", 5432, "it");
-        connection = dbConnector.getConnection();
 
         HibernateDatabaseConnector.init();
         sessionFactory = HibernateDatabaseConnector.getSessionFactory();
@@ -36,7 +29,7 @@ public class MainController {
         companyDAO = new CompanyDAO(sessionFactory);
         customerDAO = new CustomerDAO(sessionFactory);
         developerDAO = new DeveloperDAO(sessionFactory);
-        projectDAO = new ProjectDAO(connection, sessionFactory);
+        projectDAO = new ProjectDAO(sessionFactory);
         skillDAO = new SkillDAO(sessionFactory);
 
         commands = Arrays.asList(
@@ -66,7 +59,7 @@ public class MainController {
                 new LinkProjectToCompany(view, projectDAO, companyDAO),
                 new GetSumSalaryByProject(view, projectDAO),
                 new GetAllDevelopersByProject(view, projectDAO),
-                new GetAllProjectsWithDevelopers(projectDAO),
+                new GetAllProjectsWithDevelopers(view, projectDAO),
                 new GetAllDevelopersByDepartment(view, developerDAO, skillDAO),
                 new GetAllDevelopersByLevel(view, developerDAO, skillDAO)
         );
@@ -103,6 +96,4 @@ public class MainController {
                 }
             }
     }
-
-
 }
