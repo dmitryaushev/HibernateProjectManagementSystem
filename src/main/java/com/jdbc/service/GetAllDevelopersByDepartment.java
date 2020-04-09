@@ -4,8 +4,11 @@ import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.DeveloperDAO;
 import com.jdbc.dao.SkillDAO;
+import com.jdbc.model.Developer;
 import com.jdbc.model.Skill;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,7 +44,17 @@ public class GetAllDevelopersByDepartment implements Command {
             department = view.read();
         } while (!matchString(department, departmentsSet));
 
-        developerDAO.getAllDevelopersByDepartment(department).forEach(System.out::println);
+        List<Developer> developers = new ArrayList<>();
+        for (Developer developer : developerDAO.getAll()) {
+            List<Skill> skills = developer.getSkills();
+            for (Skill skill : skills) {
+                if (skill.getDepartment().equals(department)) {
+                    developers.add(developer);
+                }
+            }
+        }
+
+        developers.forEach(System.out::println);
         sleep();
     }
 }
