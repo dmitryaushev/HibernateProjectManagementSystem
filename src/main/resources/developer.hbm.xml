@@ -24,5 +24,11 @@
         <property name="salary" type="java.lang.Integer">
             <column name="salary"/>
         </property>
+        <bag name="skills" table="developer_skill" lazy="false">
+            <key>
+                <column name="developer_id"/>
+            </key>
+            <many-to-many column="skill_id" class="com.jdbc.model.Skill"/>
+        </bag>
     </class>
 </hibernate-mapping>

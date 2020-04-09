@@ -1,5 +1,7 @@
 package com.jdbc.model;
 
+import java.util.List;
+
 public class Developer {
 
     private int developerID;
@@ -8,6 +10,8 @@ public class Developer {
     private String gender;
     private int age;
     private int salary;
+    private List<Skill> skills;
+
 
     public int getDeveloperID() {
         return developerID;
@@ -55,6 +59,14 @@ public class Developer {
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
     @Override

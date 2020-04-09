@@ -45,6 +45,12 @@ public class LinkDeveloperToSkill implements Command {
                 .collect(Collectors.toSet());
         String department;
 
+        do {
+            view.write("Choose skill department");
+            departmentsSet.forEach(System.out::println);
+            department = view.read();
+        } while (!matchString(department, departmentsSet));
+
         Set<String> levelsSet = skillDAO.getAll()
                 .stream()
                 .map(Skill::getLevel)
@@ -52,30 +58,29 @@ public class LinkDeveloperToSkill implements Command {
         String level;
 
         do {
-            view.write("Choose skill department");
-            departmentsSet.forEach(System.out::println);
-            department = view.read();
-        } while (!matchString(department, departmentsSet));
-
-        do {
             view.write("Choose skill level");
             levelsSet.forEach(System.out::println);
             level = view.read();
         } while (!matchString(level, levelsSet));
 
-        int skillID = skillDAO.get(department, level).getSkillID();
         String firstName = developer.getFirstName();
         String lastName = developer.getLastName();
-
-        if (developerDAO.checkDeveloperSkillLink(developerID, skillID)) {
-            throw new UnsupportedOperationException(String.format(
-                    "%s %s already %s %s developer", firstName, lastName, department, level));
-        }
-
         view.write(String.format("%s %s is %s %s developer? Y|N", firstName, lastName, department, level));
         question(view.read());
 
-        developerDAO.linkDeveloperSkill(developerID, skillID);
+        List<Skill> skills = developer.getSkills();
+        for (Skill skill : skills) {
+            if (skill.getDepartment().equals(department)) {
+                skills.remove(skill);
+                break;
+            }
+        }
+
+        Skill skill = skillDAO.get(department, level);
+        skills.add(skill);
+        developer.setSkills(skills);
+
+        developerDAO.linkDeveloperSkill(developer);
         view.write("Successful");
         sleep();
     }
