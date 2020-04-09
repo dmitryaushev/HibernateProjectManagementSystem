@@ -4,8 +4,11 @@ import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.DeveloperDAO;
 import com.jdbc.dao.SkillDAO;
+import com.jdbc.model.Developer;
 import com.jdbc.model.Skill;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,7 +44,17 @@ public class GetAllDevelopersByLevel implements Command {
             level = view.read();
         } while (!matchString(level, levelsSet));
 
-        developerDAO.getAllDevelopersByLevel(level).forEach(System.out::println);
+        Set<Developer> developers = new HashSet<>();
+        for (Developer developer : developerDAO.getAll()) {
+            List<Skill> skills = developer.getSkills();
+            for (Skill skill : skills) {
+                if (skill.getLevel().equals(level)) {
+                    developers.add(developer);
+                }
+            }
+        }
+
+        developers.forEach(System.out::println);
         sleep();
     }
 }
