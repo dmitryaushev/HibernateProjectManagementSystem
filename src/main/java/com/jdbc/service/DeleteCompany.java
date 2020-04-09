@@ -35,7 +35,6 @@ public class DeleteCompany implements Command {
         view.write(company.toString());
         question(view.read());
 
-        companyDAO.unlinkCompanyProject(companyID);
         companyDAO.delete(company);
         view.write("Company deleted");
         sleep();

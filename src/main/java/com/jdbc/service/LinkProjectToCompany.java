@@ -8,7 +8,6 @@ import com.jdbc.model.Company;
 import com.jdbc.model.Project;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LinkProjectToCompany implements Command {
 
@@ -49,15 +48,20 @@ public class LinkProjectToCompany implements Command {
         String projectName = projectDAO.getByID(projectID).getProjectName();
         String companyName = companyDAO.getByID(companyID).getCompanyName();
 
-        if (projectDAO.checkCompanyProjectLink(companyID, projectID)) {
-            throw new UnsupportedOperationException(String.format(
-                    "Project %s already developing by company %s", projectName, companyName));
+        List<Company> companies = project.getCompanies();
+        for (Company c : companies) {
+            if (c.getCompanyID() == companyID) {
+                throw new UnsupportedOperationException(String.format(
+                        "Project %s already developing by company %s", projectName, companyName));
+            }
         }
 
         view.write(String.format("Connect a project %s with a company %s? Y|N", projectName, companyName));
         question(view.read());
 
-        projectDAO.linkCompanyProject(companyID, projectID);
+        companies.add(company);
+        project.setCompanies(companies);
+        projectDAO.update(project);
         view.write("Successful");
         sleep();
     }

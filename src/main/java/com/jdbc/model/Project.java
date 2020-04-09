@@ -11,6 +11,7 @@ public class Project {
     private int cost;
     private Date date;
     private List<Developer> developers;
+    private List<Company> companies;
 
     public Date getDate() {
         return date;
@@ -58,6 +59,14 @@ public class Project {
 
     public void setDevelopers(List<Developer> developers) {
         this.developers = developers;
+    }
+
+    public List<Company> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(List<Company> companies) {
+        this.companies = companies;
     }
 
     @Override
