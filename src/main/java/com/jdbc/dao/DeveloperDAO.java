@@ -79,6 +79,33 @@ public class DeveloperDAO implements DataAccessObject<Developer> {
         }
     }
 
+    public List<Developer> getAllDevelopersByDepartment(String department) {
+
+        try (Session session = sessionFactory.openSession()) {
+            String query = "select d from Developer d " +
+                    "join d.skills s " +
+                    "where s.department=:department";
+            return session.createQuery(query, Developer.class)
+                    .setParameter("department", department).list();
+        } catch (HibernateException e) {
+            throw new HibernateException(e);
+        }
+    }
+
+    public List<Developer> getAllDevelopersByLevel(String level) {
+
+        try (Session session = sessionFactory.openSession()) {
+            String query = "select d from Developer d " +
+                    "join d.skills s " +
+                    "where s.level=:level " +
+                    "group by d.developerID";
+            return session.createQuery(query, Developer.class)
+                    .setParameter("level", level).list();
+        } catch (HibernateException e) {
+            throw new HibernateException(e);
+        }
+    }
+
     private void transactionRollback(Transaction transaction) {
         if (transaction != null) {
             transaction.rollback();

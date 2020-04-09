@@ -44,17 +44,7 @@ public class GetAllDevelopersByLevel implements Command {
             level = view.read();
         } while (!matchString(level, levelsSet));
 
-        Set<Developer> developers = new HashSet<>();
-        for (Developer developer : developerDAO.getAll()) {
-            List<Skill> skills = developer.getSkills();
-            for (Skill skill : skills) {
-                if (skill.getLevel().equals(level)) {
-                    developers.add(developer);
-                }
-            }
-        }
-
-        developers.forEach(System.out::println);
+        developerDAO.getAllDevelopersByLevel(level);
         sleep();
     }
 }

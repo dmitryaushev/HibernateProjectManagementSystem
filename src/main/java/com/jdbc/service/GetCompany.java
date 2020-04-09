@@ -3,6 +3,7 @@ package com.jdbc.service;
 import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.CompanyDAO;
+import com.jdbc.model.Company;
 
 public class GetCompany implements Command {
 
@@ -24,12 +25,13 @@ public class GetCompany implements Command {
 
         view.write("Enter a company id");
         int companyID = Integer.parseInt(view.read());
+        Company company = companyDAO.getByID(companyID);
 
-        if (companyDAO.getByID(companyID) == null) {
+        if (company == null) {
             throw new IllegalArgumentException(String.format("Company with id %d not exist", companyID));
         }
 
-        view.write(companyDAO.getByID(companyID).toString());
+        view.write(company.toString());
         sleep();
     }
 }

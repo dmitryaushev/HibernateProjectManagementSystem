@@ -44,17 +44,7 @@ public class GetAllDevelopersByDepartment implements Command {
             department = view.read();
         } while (!matchString(department, departmentsSet));
 
-        List<Developer> developers = new ArrayList<>();
-        for (Developer developer : developerDAO.getAll()) {
-            List<Skill> skills = developer.getSkills();
-            for (Skill skill : skills) {
-                if (skill.getDepartment().equals(department)) {
-                    developers.add(developer);
-                }
-            }
-        }
-
-        developers.forEach(System.out::println);
+        developerDAO.getAllDevelopersByDepartment(department).forEach(System.out::println);
         sleep();
     }
 }

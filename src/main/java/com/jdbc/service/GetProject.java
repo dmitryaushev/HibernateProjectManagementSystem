@@ -3,6 +3,7 @@ package com.jdbc.service;
 import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.ProjectDAO;
+import com.jdbc.model.Project;
 
 public class GetProject implements Command {
 
@@ -24,12 +25,13 @@ public class GetProject implements Command {
 
         view.write("Enter a project id");
         int projectID = Integer.parseInt(view.read());
+        Project project = projectDAO.getByID(projectID);
 
-        if (projectDAO.getByID(projectID) == null) {
+        if (project == null) {
             throw new IllegalArgumentException(String.format("Project with id %d not exist", projectID));
         }
 
-        view.write(projectDAO.getByID(projectID).toString());
+        view.write(project.toString());
         sleep();
     }
 }

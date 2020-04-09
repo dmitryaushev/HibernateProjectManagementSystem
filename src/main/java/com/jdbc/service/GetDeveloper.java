@@ -3,6 +3,7 @@ package com.jdbc.service;
 import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.DeveloperDAO;
+import com.jdbc.model.Developer;
 
 public class GetDeveloper implements Command {
 
@@ -24,12 +25,13 @@ public class GetDeveloper implements Command {
 
         view.write("Enter a developer id");
         int developerID = Integer.parseInt(view.read());
+        Developer developer = developerDAO.getByID(developerID);
 
-        if (developerDAO.getByID(developerID) == null) {
+        if (developer == null) {
             throw new IllegalArgumentException(String.format("Developer with id %d not exist", developerID));
         }
 
-        view.write(developerDAO.getByID(developerID).toString());
+        view.write(developer.toString());
         sleep();
     }
 }
