@@ -1,13 +1,17 @@
 package com.jdbc.service;
 
 import com.jdbc.config.Command;
+import com.jdbc.config.View;
 import com.jdbc.dao.ProjectDAO;
+import com.jdbc.model.Project;
 
 public class GetAllProjectsWithDevelopers implements Command {
 
+    private View view;
     private ProjectDAO projectDAO;
 
-    public GetAllProjectsWithDevelopers(ProjectDAO projectDAO) {
+    public GetAllProjectsWithDevelopers(View view, ProjectDAO projectDAO) {
+        this.view = view;
         this.projectDAO = projectDAO;
     }
 
@@ -19,7 +23,15 @@ public class GetAllProjectsWithDevelopers implements Command {
     @Override
     public void process() {
 
-        projectDAO.getAllProjectsWithDevelopers().forEach(System.out::println);
+        StringBuilder result = new StringBuilder();
+
+        for (Project project : projectDAO.getAll()) {
+            result.append(project.getDate()).append(" ")
+                    .append(project.getProjectName()).append(" ")
+                    .append(project.getDevelopers().size()).append("\n");
+        }
+
+        view.write(result.toString());
         sleep();
     }
 }
