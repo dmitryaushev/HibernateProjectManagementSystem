@@ -35,7 +35,6 @@ public class DeleteProject implements Command {
         view.write(project.toString());
         question(view.read());
 
-        projectDAO.unlinkCustomerProject(projectID);
         projectDAO.delete(project);
         view.write("Project deleted");
         sleep();

@@ -35,7 +35,6 @@ public class DeleteCustomer implements Command {
         view.write(customer.toString());
         question(view.read());
 
-        customerDAO.unlinkCustomerProject(customerID);
         customerDAO.delete(customer);
         view.write("Customer deleted");
         sleep();

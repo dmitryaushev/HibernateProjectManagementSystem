@@ -8,7 +8,6 @@ import com.jdbc.model.Customer;
 import com.jdbc.model.Project;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LinkProjectToCustomer implements Command {
 
@@ -49,15 +48,20 @@ public class LinkProjectToCustomer implements Command {
         String projectName = projectDAO.getByID(projectID).getProjectName();
         String customerName = customerDAO.getByID(customerID).getCustomerName();
 
-        if (projectDAO.checkCustomerProjectLink(customerID, projectID)) {
-            throw new UnsupportedOperationException(String.format(
-                    "Customer %s already owns project %s", customerName, projectName));
+        List<Customer> customers = project.getCustomers();
+        for (Customer c : customers) {
+            if (c.getCustomerID() == customerID) {
+                throw new UnsupportedOperationException(String.format(
+                        "Customer %s already owns project %s", customerName, projectName));
+            }
         }
 
         view.write(String.format("Connect a project %s with a customer %s? Y|N", projectName, customerName));
         question(view.read());
 
-        projectDAO.linkCustomerProject(customerID, projectID);
+        customers.add(customer);
+        project.setCustomers(customers);
+        projectDAO.update(project);
         view.write("Successful");
         sleep();
     }

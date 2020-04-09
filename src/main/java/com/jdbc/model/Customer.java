@@ -1,10 +1,13 @@
 package com.jdbc.model;
 
+import java.util.List;
+
 public class Customer {
 
     private int customerID;
     private String customerName;
     private String location;
+    List<Project> projects;
 
     public int getCustomerID() {
         return customerID;
@@ -28,6 +31,14 @@ public class Customer {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     @Override

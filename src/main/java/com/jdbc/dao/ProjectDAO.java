@@ -20,13 +20,6 @@ public class ProjectDAO implements DataAccessObject<Project> {
     private static String getAllDevelopersByProject;
     private static String getAllProjectsWithDevelopers;
 
-    private static String linkCustomerProject = "INSERT INTO customer_project (customer_id, project_id) " +
-            "VALUES(?, ?)";
-
-    private static String unlinkCustomerProject = "DELETE FROM customer_project WHERE project_id = ?;";
-    private static String getCustomerProjectLink = "SELECT * FROM customer_project " +
-            "WHERE customer_id = ? AND project_id = ?;";
-
     public ProjectDAO(Connection connection, SessionFactory sessionFactory) {
         this.connection = connection;
         this.sessionFactory = sessionFactory;
@@ -181,43 +174,6 @@ public class ProjectDAO implements DataAccessObject<Project> {
         }
 
         return projectsList;
-    }
-
-    public void linkCustomerProject(int customerID, int projectID) {
-
-        try (PreparedStatement statement = connection.prepareStatement(linkCustomerProject)) {
-
-            statement.setInt(1, customerID);
-            statement.setInt(2, projectID);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void unlinkCustomerProject(int projectID) {
-
-        try (PreparedStatement statement = connection.prepareStatement(unlinkCustomerProject)) {
-
-            statement.setInt(1, projectID);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean checkCustomerProjectLink(int customerID, int projectID) {
-
-        boolean result = false;
-        try (PreparedStatement statement = connection.prepareStatement(getCustomerProjectLink)) {
-            statement.setInt(1, customerID);
-            statement.setInt(2, projectID);
-            ResultSet resultSet = statement.executeQuery();
-            result = resultSet.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     private void transactionRollback(Transaction transaction) {

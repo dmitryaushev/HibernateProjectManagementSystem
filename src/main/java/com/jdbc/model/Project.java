@@ -12,6 +12,7 @@ public class Project {
     private Date date;
     private List<Developer> developers;
     private List<Company> companies;
+    private List<Customer> customers;
 
     public Date getDate() {
         return date;
@@ -67,6 +68,14 @@ public class Project {
 
     public void setCompanies(List<Company> companies) {
         this.companies = companies;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     @Override

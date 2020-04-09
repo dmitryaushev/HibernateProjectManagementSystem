@@ -6,20 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CustomerDAO implements DataAccessObject<Customer> {
 
-    private Connection connection;
     private SessionFactory sessionFactory;
 
-    private static String unlinkCustomerProject = "DELETE FROM customer_project WHERE customer_id = ?;";
-
-    public CustomerDAO(Connection connection, SessionFactory sessionFactory) {
-        this.connection = connection;
+    public CustomerDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -83,17 +76,6 @@ public class CustomerDAO implements DataAccessObject<Customer> {
         } catch (HibernateException e) {
             transactionRollback(transaction);
             throw new HibernateException(e);
-        }
-    }
-
-    public void unlinkCustomerProject(int customerID) {
-
-        try (PreparedStatement statement = connection.prepareStatement(unlinkCustomerProject)) {
-
-            statement.setInt(1, customerID);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
