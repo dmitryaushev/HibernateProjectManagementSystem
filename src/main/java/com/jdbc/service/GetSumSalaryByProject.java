@@ -6,9 +6,6 @@ import com.jdbc.dao.ProjectDAO;
 import com.jdbc.model.Developer;
 import com.jdbc.model.Project;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class GetSumSalaryByProject implements Command {
 
     private View view;

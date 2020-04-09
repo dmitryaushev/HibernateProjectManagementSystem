@@ -6,8 +6,6 @@ import com.jdbc.dao.ProjectDAO;
 import com.jdbc.model.Project;
 
 import java.sql.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class UpdateProject implements Command {
 

@@ -3,10 +3,6 @@ package com.jdbc.service;
 import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.CustomerDAO;
-import com.jdbc.model.Customer;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class GetCustomer implements Command {
 

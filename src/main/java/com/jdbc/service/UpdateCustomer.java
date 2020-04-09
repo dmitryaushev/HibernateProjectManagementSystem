@@ -5,9 +5,6 @@ import com.jdbc.config.View;
 import com.jdbc.dao.CustomerDAO;
 import com.jdbc.model.Customer;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class UpdateCustomer implements Command {
 
     private View view;

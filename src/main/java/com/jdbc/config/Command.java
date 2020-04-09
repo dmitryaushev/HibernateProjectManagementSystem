@@ -5,6 +5,7 @@ import java.util.Set;
 public interface Command {
 
     String command();
+
     void process();
 
     default boolean canProcess(String input) {
@@ -15,14 +16,14 @@ public interface Command {
 
         boolean match = false;
         for (String string : set)
-            if(string.equals(s)) {
+            if (string.equals(s)) {
                 match = true;
                 break;
             }
         return match;
     }
 
-    default void question (String answer) {
+    default void question(String answer) {
         switch (answer) {
             case "Y":
                 break;

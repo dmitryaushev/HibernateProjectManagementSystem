@@ -5,9 +5,6 @@ import com.jdbc.config.View;
 import com.jdbc.dao.CompanyDAO;
 import com.jdbc.model.Company;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class UpdateCompany implements Command {
 
     private View view;

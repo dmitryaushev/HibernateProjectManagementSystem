@@ -3,10 +3,6 @@ package com.jdbc.service;
 import com.jdbc.config.Command;
 import com.jdbc.config.View;
 import com.jdbc.dao.DeveloperDAO;
-import com.jdbc.model.Developer;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class GetDeveloper implements Command {
 
