@@ -38,6 +38,23 @@ public class CompanyServlet extends HttpServlet {
         else if (action.startsWith("/findCompany")) {
             req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
         }
+        else if (action.startsWith("/find")) {
+            String companyName = req.getParameter("companyName");
+            if (companyName.isEmpty()) {
+                String message = "Company name is empty";
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
+            }
+            Company company = companyService.get(companyName);
+            if (company == null) {
+                String message = String.format("Company with name %s not exist", companyName);
+                req.setAttribute("message", message);
+                req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
+            } else {
+                req.setAttribute("company", company);
+                req.getRequestDispatcher("/view/companyDetails.jsp").forward(req, resp);
+            }
+        }
         else if (action.startsWith("/createCompany")) {
             req.getRequestDispatcher("/view/createCompany.jsp").forward(req, resp);
         }
@@ -63,24 +80,7 @@ public class CompanyServlet extends HttpServlet {
 
         String action = getAction(req);
 
-        if (action.startsWith("/findCompany")) {
-            String companyName = req.getParameter("companyName");
-            if (companyName.isEmpty()) {
-                String message = "Company name is empty";
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
-            }
-            Company company = companyService.get(companyName);
-            if (company == null) {
-                String message = String.format("Company with name %s not exist", companyName);
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
-            } else {
-                req.setAttribute("company", company);
-                req.getRequestDispatcher("/view/companyDetails.jsp").forward(req, resp);
-            }
-        }
-        else if (action.startsWith("/createCompany")) {
+        if (action.startsWith("/createCompany")) {
             String validate = companyService.validateCompany(req);
             if (!validate.isEmpty()) {
                 req.setAttribute("validate", validate);

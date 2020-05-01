@@ -9,12 +9,12 @@
 </head>
 <body>
 <c:import url="navibar.jsp"/>
-<form method="post" action="findCompany">
+<form method="get" action="find">
     <table>
         <tbody>
         <tr>
             <td>
-                <p>Enter company named</p>
+                <p>Enter company name</p>
             </td>
             <td>
                 <input type="text" name="companyName">
