@@ -10,6 +10,7 @@ public class Developer {
     private String gender;
     private int age;
     private int salary;
+    private String email;
     private List<Skill> skills;
     private List<Project> projects;
 
@@ -60,6 +61,14 @@ public class Developer {
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Skill> getSkills() {

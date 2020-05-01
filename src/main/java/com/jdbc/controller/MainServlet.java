@@ -1,4 +1,4 @@
-package com.jdbc.servlet;
+package com.jdbc.controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

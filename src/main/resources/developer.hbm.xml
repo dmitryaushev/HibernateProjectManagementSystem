@@ -24,6 +24,9 @@
         <property name="salary" type="java.lang.Integer">
             <column name="salary"/>
         </property>
+        <property name="email" type="java.lang.String">
+            <column name="email"/>
+        </property>
         <bag name="skills" table="developer_skill" lazy="false">
             <key>
                 <column name="developer_id"/>

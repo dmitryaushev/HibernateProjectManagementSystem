@@ -13,7 +13,7 @@ public class MainController {
     private SessionFactory sessionFactory;
     private List<Command> commands;
 
-    private CompanyDAO companyDAO;
+    private CompanyDAOImpl companyDAO;
     private CustomerDAO customerDAO;
     private DeveloperDAO developerDAO;
     private ProjectDAO projectDAO;
@@ -26,7 +26,7 @@ public class MainController {
         HibernateDatabaseConnector.init();
         sessionFactory = HibernateDatabaseConnector.getSessionFactory();
 
-        companyDAO = new CompanyDAO(sessionFactory);
+        companyDAO = new CompanyDAOImpl(sessionFactory);
         customerDAO = new CustomerDAO(sessionFactory);
         developerDAO = new DeveloperDAO(sessionFactory);
         projectDAO = new ProjectDAO(sessionFactory);
