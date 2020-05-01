@@ -29,7 +29,7 @@ public class MainController {
         companyDAO = new CompanyDAOImpl(sessionFactory);
         customerDAO = new CustomerDAO(sessionFactory);
         developerDAO = new DeveloperDAO(sessionFactory);
-        projectDAO = new ProjectDAO(sessionFactory);
+        projectDAO = new ProjectDAOImpl(sessionFactory);
         skillDAO = new SkillDAO(sessionFactory);
 
         commands = Arrays.asList(
