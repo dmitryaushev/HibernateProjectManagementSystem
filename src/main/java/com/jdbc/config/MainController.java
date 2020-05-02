@@ -28,7 +28,7 @@ public class MainController {
 
         companyDAO = new CompanyDAOImpl(sessionFactory);
         customerDAO = new CustomerDAOImpl(sessionFactory);
-        developerDAO = new DeveloperDAO(sessionFactory);
+        developerDAO = new DeveloperDAOImpl(sessionFactory);
         projectDAO = new ProjectDAOImpl(sessionFactory);
         skillDAO = new SkillDAO(sessionFactory);
 
