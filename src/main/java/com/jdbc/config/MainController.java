@@ -27,7 +27,7 @@ public class MainController {
         sessionFactory = HibernateDatabaseConnector.getSessionFactory();
 
         companyDAO = new CompanyDAOImpl(sessionFactory);
-        customerDAO = new CustomerDAO(sessionFactory);
+        customerDAO = new CustomerDAOImpl(sessionFactory);
         developerDAO = new DeveloperDAO(sessionFactory);
         projectDAO = new ProjectDAOImpl(sessionFactory);
         skillDAO = new SkillDAO(sessionFactory);
