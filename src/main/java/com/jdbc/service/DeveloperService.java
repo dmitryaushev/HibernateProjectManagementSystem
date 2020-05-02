@@ -43,6 +43,18 @@ public class DeveloperService {
         developerDAO.delete(developer);
     }
 
+    public List<Developer> getAllDevelopersByLevel(String level) {
+        return developerDAO.getAllDevelopersByLevel(level);
+    }
+
+    public List<Developer> getAllDevelopersByDepartment(String department) {
+        return developerDAO.getAllDevelopersByDepartment(department);
+    }
+
+    public List<Developer> getAllDeveloperBySkill(String department,String level) {
+        return developerDAO.getAllDeveloperBySkill(department, level);
+    }
+
     public String validateDeveloper(HttpServletRequest req) {
         String email = req.getParameter("email").trim();
         if (get(email) != null) {
@@ -120,5 +132,20 @@ public class DeveloperService {
         developer.setSkills(skills);
 
         return developer;
+    }
+
+    public List<Developer> getDevelopersBySkill(HttpServletRequest req) {
+        String department = req.getParameter("department");
+        String level = req.getParameter("level");
+
+        if (level == null && department == null) {
+            return getAll();
+        } else if (department == null) {
+            return getAllDevelopersByLevel(level);
+        } else if (level == null) {
+            return getAllDevelopersByDepartment(department);
+        } else {
+            return getAllDeveloperBySkill(department, level);
+        }
     }
 }

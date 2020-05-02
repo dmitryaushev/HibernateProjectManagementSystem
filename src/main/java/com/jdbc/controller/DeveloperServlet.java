@@ -24,7 +24,6 @@ public class DeveloperServlet extends HttpServlet {
         super.init();
         developerService = new DeveloperService(new DeveloperDAOImpl(HibernateDatabaseConnector.getSessionFactory()),
                 new SkillDAO(HibernateDatabaseConnector.getSessionFactory()));
-
     }
 
     @Override
@@ -69,6 +68,11 @@ public class DeveloperServlet extends HttpServlet {
         }
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
+        }
+        else if(action.startsWith("/showSkill")) {
+            List<Developer> developers = developerService.getDevelopersBySkill(req);
+            req.setAttribute("developers", developers);
+            req.getRequestDispatcher("/view/showDevelopers.jsp").forward(req, resp);
         }
     }
 

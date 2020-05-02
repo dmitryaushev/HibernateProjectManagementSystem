@@ -119,6 +119,21 @@ public class DeveloperDAOImpl implements DeveloperDAO {
         }
     }
 
+    @Override
+    public List<Developer> getAllDeveloperBySkill(String department, String level) {
+        try (Session session = sessionFactory.openSession()) {
+            String query = "select d from Developer d " +
+                    "join d.skills s " +
+                    "where s.department=:department " +
+                    "and s.level=:level";
+            return session.createQuery(query, Developer.class)
+                    .setParameter("department", department)
+                    .setParameter("level", level).list();
+        } catch (HibernateException e) {
+            throw new HibernateException(e);
+        }
+    }
+
     private void transactionRollback(Transaction transaction) {
         if (transaction != null) {
             transaction.rollback();
