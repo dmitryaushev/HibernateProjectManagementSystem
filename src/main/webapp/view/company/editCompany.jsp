@@ -12,7 +12,6 @@
 <form method="post" action="edit">
     <input type="hidden" value="${company.companyID}" name="companyID">
     <input type="hidden" value="${company.companyName}" name="oldName">
-    <input type="hidden" value="${company.location}" name="oldLocation">
     <table>
         <tbody>
         <tr>
@@ -20,7 +19,7 @@
                 <p>Enter company name</p>
             </td>
             <td>
-                <input type="text" value="${company.companyName}" name="newName">
+                <input type="text" value="${company.companyName}" name="companyName" required pattern=".*\S+.*">
             </td>
         </tr>
         <tr>
@@ -28,7 +27,7 @@
                 <p>Enter company location</p>
             </td>
             <td>
-                <input type="text" value="${company.location}" name="newLocation">
+                <input type="text" value="${company.location}" name="location" required pattern=".*\S+.*">
             </td>
         </tr>
         </tbody>

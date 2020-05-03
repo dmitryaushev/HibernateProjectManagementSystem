@@ -17,7 +17,7 @@
                 <p>Enter company name</p>
             </td>
             <td>
-                <input type="text" name="companyName">
+                <input type="text" name="companyName" required pattern=".*\S+.*">
             </td>
         </tr>
         </tbody>

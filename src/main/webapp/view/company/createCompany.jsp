@@ -17,7 +17,7 @@
                 <p>Enter company name</p>
             </td>
             <td>
-                <input type="text" name="companyName">
+                <input type="text" name="companyName" required pattern=".*\S+.*">
             </td>
         </tr>
         <tr>
@@ -25,7 +25,7 @@
                 <p>Enter company location</p>
             </td>
             <td>
-                <input type="text" name="location">
+                <input type="text" name="location" required pattern=".*\S+.*">
             </td>
         </tr>
         </tbody>

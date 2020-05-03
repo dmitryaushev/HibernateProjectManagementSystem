@@ -39,8 +39,8 @@ public class CompanyService {
     }
 
     public Company mapCompany(HttpServletRequest req) {
-        String companyName = req.getParameter("companyName");
-        String location = req.getParameter("location");
+        String companyName = req.getParameter("companyName").trim();
+        String location = req.getParameter("location").trim();
 
         Company company = new Company();
         company.setCompanyName(companyName);
@@ -48,48 +48,31 @@ public class CompanyService {
         return company;
     }
 
-    public Company mapEditCompany(HttpServletRequest req, String nameParameter, String locationParameter) {
+    public Company mapEditCompany(Company company, HttpServletRequest req) {
+        String companyName = req.getParameter("companyName").trim();
+        String location = req.getParameter("location").trim();
 
-        String companyID = req.getParameter("companyID");
-        String companyName = req.getParameter(nameParameter);
-        String location = req.getParameter(locationParameter);
-
-        Company company = get(Integer.parseInt(companyID));
         company.setCompanyName(companyName);
         company.setLocation(location);
         return company;
     }
 
     public String validateCompany(HttpServletRequest req) {
-
-        String result = "";
         String companyName = req.getParameter("companyName").trim();
-        String location = req.getParameter("location").trim();
-        if (companyName.isEmpty() || location.isEmpty()) {
-            return "Company name and location must not be empty";
-        }
-        Company company = get(companyName);
-        if (company != null) {
+        if (get(companyName) != null) {
             return String.format("Company with title %s already exist", companyName);
         }
-        return result;
+        return "";
     }
 
     public String validateEditCompany(HttpServletRequest req) {
-
-        String result = "";
         String oldName = req.getParameter("oldName").trim();
-        String newName = req.getParameter("newName").trim();
-        String location = req.getParameter("newLocation").trim();
-        if (newName.isEmpty() || location.isEmpty()) {
-            return "Company name and location must not be empty";
-        } else if (oldName.equals(newName)) {
-            return result;
-        }
-        Company company = get(newName);
-        if (company != null) {
+        String newName = req.getParameter("companyName").trim();
+        if (oldName.equals(newName)) {
+            return "";
+        } else if (get(newName) != null) {
             return String.format("Company with title %s already exist", newName);
         }
-        return result;
+        return "";
     }
 }

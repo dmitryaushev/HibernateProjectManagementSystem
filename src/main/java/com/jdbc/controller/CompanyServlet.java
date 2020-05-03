@@ -40,11 +40,6 @@ public class CompanyServlet extends HttpServlet {
         }
         else if (action.startsWith("/find")) {
             String companyName = req.getParameter("companyName");
-            if (companyName.isEmpty()) {
-                String message = "Company name is empty";
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/company/findCompany.jsp").forward(req, resp);
-            }
             Company company = companyService.get(companyName);
             if (company == null) {
                 String message = String.format("Company with name %s not exist", companyName);
@@ -93,14 +88,15 @@ public class CompanyServlet extends HttpServlet {
             }
         }
         else if (action.startsWith("/edit")) {
+            String id = req.getParameter("companyID");
+            Company company = companyService.get(Integer.parseInt(id));
             String validate = companyService.validateEditCompany(req);
             if (!validate.isEmpty()) {
-                Company company = companyService.mapEditCompany(req, "oldName", "oldLocation");
                 req.setAttribute("company", company);
                 req.setAttribute("validate", validate);
                 req.getRequestDispatcher("/view/company/editCompany.jsp").forward(req, resp);
             } else {
-                Company company = companyService.mapEditCompany(req, "newName", "newLocation");
+                company = companyService.mapEditCompany(company, req);
                 companyService.update(company);
                 req.setAttribute("company", company);
                 req.getRequestDispatcher("/view/company/companyDetails.jsp").forward(req, resp);
