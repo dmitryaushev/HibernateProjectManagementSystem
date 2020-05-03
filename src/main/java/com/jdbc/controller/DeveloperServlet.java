@@ -34,10 +34,10 @@ public class DeveloperServlet extends HttpServlet {
         if (action.startsWith("/showDevelopers")) {
             List<Developer> developers = developerService.getAll();
             req.setAttribute("developers", developers);
-            req.getRequestDispatcher("/view/showDevelopers.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/developer/showDevelopers.jsp").forward(req, resp);
         }
         else if (action.startsWith("/findDeveloper")) {
-            req.getRequestDispatcher("/view/findDeveloper.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/developer/findDeveloper.jsp").forward(req, resp);
         }
         else if (action.startsWith("/find")) {
             String email = req.getParameter("email").trim();
@@ -45,26 +45,26 @@ public class DeveloperServlet extends HttpServlet {
             if (developer == null) {
                 String message = String.format("Developer with email %s not exist", email);
                 req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findDeveloper.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/developer/findDeveloper.jsp").forward(req, resp);
             } else {
                 req.setAttribute("developer", developer);
-                req.getRequestDispatcher("/view/developerDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/developer/developerDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/createDeveloper")) {
-            req.getRequestDispatcher("/view/createDeveloper.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/developer/createDeveloper.jsp").forward(req, resp);
         }
         else if (action.startsWith("/get")) {
             String id = req.getParameter("id");
             Developer developer = developerService.get(Integer.parseInt(id));
             req.setAttribute("developer", developer);
-            req.getRequestDispatcher("/view/developerDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/developer/developerDetails.jsp").forward(req, resp);
         }
         else if (action.startsWith("/edit")) {
             String id = req.getParameter("id");
             Developer developer = developerService.get(Integer.parseInt(id));
             req.setAttribute("developer", developer);
-            req.getRequestDispatcher("/view/editDeveloper.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/developer/editDeveloper.jsp").forward(req, resp);
         }
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
@@ -72,7 +72,7 @@ public class DeveloperServlet extends HttpServlet {
         else if(action.startsWith("/showSkill")) {
             List<Developer> developers = developerService.getDevelopersBySkill(req);
             req.setAttribute("developers", developers);
-            req.getRequestDispatcher("/view/showDevelopers.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/developer/showDevelopers.jsp").forward(req, resp);
         }
     }
 
@@ -85,12 +85,12 @@ public class DeveloperServlet extends HttpServlet {
             String validate = developerService.validateDeveloper(req);
             if (!validate.isEmpty()) {
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/createDeveloper.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/developer/createDeveloper.jsp").forward(req, resp);
             } else {
                 Developer developer = developerService.mapDeveloper(req);
                 developerService.create(developer);
                 req.setAttribute("developer", developer);
-                req.getRequestDispatcher("/view/developerDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/developer/developerDetails.jsp").forward(req, resp);
             }
         } else if (action.startsWith("/edit")) {
             String id = req.getParameter("developerID");
@@ -99,12 +99,12 @@ public class DeveloperServlet extends HttpServlet {
             if (!validate.isEmpty()) {
                 req.setAttribute("developer", developer);
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/editDeveloper.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/developer/editDeveloper.jsp").forward(req, resp);
             } else {
                 developer = developerService.mapEditDeveloper(developer, req);
                 developerService.update(developer);
                 req.setAttribute("developer", developer);
-                req.getRequestDispatcher("/view/developerDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/developer/developerDetails.jsp").forward(req, resp);
             }
         }
     }

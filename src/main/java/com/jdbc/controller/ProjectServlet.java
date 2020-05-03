@@ -42,42 +42,42 @@ public class ProjectServlet extends HttpServlet {
         if (action.startsWith("/showProjects")) {
             List<Project> projects = projectService.getAll();
             req.setAttribute("projects", projects);
-            req.getRequestDispatcher("/view/showProjects.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/showProjects.jsp").forward(req, resp);
         }
         else if (action.startsWith("/findProject")) {
-            req.getRequestDispatcher("/view/findProject.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/findProject.jsp").forward(req, resp);
         }
         else if (action.startsWith("/find")) {
             String projectName = req.getParameter("projectName");
             if (projectName.isEmpty()) {
                 String message = "Project name is empty";
                 req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findProject.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/findProject.jsp").forward(req, resp);
             }
             Project project = projectService.get(projectName);
             if (project == null) {
                 String message = String.format("Project with name %s not exist", projectName);
                 req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findProject.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/findProject.jsp").forward(req, resp);
             } else {
                 req.setAttribute("project", project);
-                req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/createProject")) {
-            req.getRequestDispatcher("/view/createProject.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/createProject.jsp").forward(req, resp);
         }
         else if (action.startsWith("/get")) {
             String id = req.getParameter("id");
             Project project = projectService.get(Integer.parseInt(id));
             req.setAttribute("project", project);
-            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
         }
         else if (action.startsWith("/edit")) {
             String id = req.getParameter("id");
             Project project = projectService.get(Integer.parseInt(id));
             req.setAttribute("project", project);
-            req.getRequestDispatcher("/view/editProject.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/editProject.jsp").forward(req, resp);
         }
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
@@ -92,18 +92,18 @@ public class ProjectServlet extends HttpServlet {
             req.setAttribute("companies", companies);
             req.setAttribute("customers", customers);
             req.setAttribute("developers", developers);
-            req.getRequestDispatcher("/view/linkProject.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/linkProject.jsp").forward(req, resp);
         }
         else if ((action.startsWith("/unlinkAll"))) {
             Project project = projectService.unlinkAll(req);
             req.setAttribute("project", project);
-            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
         }
         else if (action.startsWith("/unlink")) {
             String id = req.getParameter("id");
             Project project = projectService.get(Integer.parseInt(id));
             req.setAttribute("project", project);
-            req.getRequestDispatcher("/view/unlinkProject.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/unlinkProject.jsp").forward(req, resp);
         }
     }
 
@@ -116,12 +116,12 @@ public class ProjectServlet extends HttpServlet {
             String validate = projectService.validateProject(req);
             if (!validate.isEmpty()) {
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/createProject.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/createProject.jsp").forward(req, resp);
             } else {
                 Project project = projectService.mapProject(req);
                 projectService.create(project);
                 req.setAttribute("project", project);
-                req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/edit")) {
@@ -131,23 +131,23 @@ public class ProjectServlet extends HttpServlet {
             if (!validate.isEmpty()) {
                 req.setAttribute("project", project);
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/editProject.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/editProject.jsp").forward(req, resp);
             } else {
                 project = projectService.mapEditProject(project, req);
                 projectService.update(project);
                 req.setAttribute("project", project);
-                req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/linkProject")) {
             Project project = projectService.link(req);
             req.setAttribute("project", project);
-            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
         }
         else if (action.startsWith("/unlinkProject")){
             Project project = projectService.unlink(req);
             req.setAttribute("project", project);
-            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/project/projectDetails.jsp").forward(req, resp);
         }
     }
 

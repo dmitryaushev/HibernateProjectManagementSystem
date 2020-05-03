@@ -31,10 +31,10 @@ public class CustomerServlet extends HttpServlet {
         if (action.startsWith("/showCustomers")) {
             List<Customer> customers = customerService.getAll();
             req.setAttribute("customers", customers);
-            req.getRequestDispatcher("/view/showCustomers.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/customer/showCustomers.jsp").forward(req, resp);
         }
         else if (action.startsWith("/findCustomer")) {
-            req.getRequestDispatcher("/view/findCustomer.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/customer/findCustomer.jsp").forward(req, resp);
         }
         else if (action.startsWith("/find")) {
             String customerName = req.getParameter("customerName").trim();
@@ -42,26 +42,26 @@ public class CustomerServlet extends HttpServlet {
             if (customer == null) {
                 String message = String.format("Customer with name %s not exist", customerName);
                 req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findCustomer.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/customer/findCustomer.jsp").forward(req, resp);
             } else {
                 req.setAttribute("customer", customer);
-                req.getRequestDispatcher("/view/customerDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/customer/customerDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/createCustomer")) {
-            req.getRequestDispatcher("/view/createCustomer.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/customer/createCustomer.jsp").forward(req, resp);
         }
         else if (action.startsWith("/get")) {
             String id = req.getParameter("id");
             Customer customer = customerService.get(Integer.parseInt(id));
             req.setAttribute("customer", customer);
-            req.getRequestDispatcher("/view/customerDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/customer/customerDetails.jsp").forward(req, resp);
         }
         else if (action.startsWith("/edit")) {
             String id = req.getParameter("id");
             Customer customer = customerService.get(Integer.parseInt(id));
             req.setAttribute("customer", customer);
-            req.getRequestDispatcher("/view/editCustomer.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/customer/editCustomer.jsp").forward(req, resp);
         }
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
@@ -77,12 +77,12 @@ public class CustomerServlet extends HttpServlet {
             String validate = customerService.validateCustomer(req);
             if (!validate.isEmpty()) {
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/createCustomer.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/customer/createCustomer.jsp").forward(req, resp);
             } else {
                 Customer customer = customerService.mapCustomer(req);
                 customerService.create(customer);
                 req.setAttribute("customer", customer);
-                req.getRequestDispatcher("/view/customerDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/customer/customerDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/edit")) {
@@ -92,12 +92,12 @@ public class CustomerServlet extends HttpServlet {
             if (!validate.isEmpty()) {
                 req.setAttribute("customer", customer);
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/editCustomer.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/customer/editCustomer.jsp").forward(req, resp);
             } else {
                 customer = customerService.mapEditCustomer(customer, req);
                 customerService.update(customer);
                 req.setAttribute("customer", customer);
-                req.getRequestDispatcher("/view/customerDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/customer/customerDetails.jsp").forward(req, resp);
             }
         }
     }

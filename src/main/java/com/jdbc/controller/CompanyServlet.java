@@ -33,42 +33,42 @@ public class CompanyServlet extends HttpServlet {
         if (action.startsWith("/showCompanies")) {
             List<Company> companies = companyService.getAll();
             req.setAttribute("companies", companies);
-            req.getRequestDispatcher("/view/showCompanies.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/company/showCompanies.jsp").forward(req, resp);
         }
         else if (action.startsWith("/findCompany")) {
-            req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/company/findCompany.jsp").forward(req, resp);
         }
         else if (action.startsWith("/find")) {
             String companyName = req.getParameter("companyName");
             if (companyName.isEmpty()) {
                 String message = "Company name is empty";
                 req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/findCompany.jsp").forward(req, resp);
             }
             Company company = companyService.get(companyName);
             if (company == null) {
                 String message = String.format("Company with name %s not exist", companyName);
                 req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/findCompany.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/findCompany.jsp").forward(req, resp);
             } else {
                 req.setAttribute("company", company);
-                req.getRequestDispatcher("/view/companyDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/companyDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/createCompany")) {
-            req.getRequestDispatcher("/view/createCompany.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/company/createCompany.jsp").forward(req, resp);
         }
         else if (action.startsWith("/get")) {
             String id = req.getParameter("id");
             Company company = companyService.get(Integer.parseInt(id));
             req.setAttribute("company", company);
-            req.getRequestDispatcher("/view/companyDetails.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/company/companyDetails.jsp").forward(req, resp);
         }
         else if (action.startsWith("/edit")) {
             String id = req.getParameter("id");
             Company company = companyService.get(Integer.parseInt(id));
             req.setAttribute("company", company);
-            req.getRequestDispatcher("/view/editCompany.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/company/editCompany.jsp").forward(req, resp);
         }
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
@@ -84,12 +84,12 @@ public class CompanyServlet extends HttpServlet {
             String validate = companyService.validateCompany(req);
             if (!validate.isEmpty()) {
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/createCompany.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/createCompany.jsp").forward(req, resp);
             } else {
                 Company company = companyService.mapCompany(req);
                 companyService.create(company);
                 req.setAttribute("company", company);
-                req.getRequestDispatcher("/view/companyDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/companyDetails.jsp").forward(req, resp);
             }
         }
         else if (action.startsWith("/edit")) {
@@ -98,12 +98,12 @@ public class CompanyServlet extends HttpServlet {
                 Company company = companyService.mapEditCompany(req, "oldName", "oldLocation");
                 req.setAttribute("company", company);
                 req.setAttribute("validate", validate);
-                req.getRequestDispatcher("/view/editCompany.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/editCompany.jsp").forward(req, resp);
             } else {
                 Company company = companyService.mapEditCompany(req, "newName", "newLocation");
                 companyService.update(company);
                 req.setAttribute("company", company);
-                req.getRequestDispatcher("/view/companyDetails.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/company/companyDetails.jsp").forward(req, resp);
             }
         }
     }
