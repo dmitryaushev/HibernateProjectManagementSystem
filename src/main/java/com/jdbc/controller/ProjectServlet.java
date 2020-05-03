@@ -49,11 +49,6 @@ public class ProjectServlet extends HttpServlet {
         }
         else if (action.startsWith("/find")) {
             String projectName = req.getParameter("projectName");
-            if (projectName.isEmpty()) {
-                String message = "Project name is empty";
-                req.setAttribute("message", message);
-                req.getRequestDispatcher("/view/project/findProject.jsp").forward(req, resp);
-            }
             Project project = projectService.get(projectName);
             if (project == null) {
                 String message = String.format("Project with name %s not exist", projectName);

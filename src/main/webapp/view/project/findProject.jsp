@@ -17,7 +17,7 @@
                 <p>Enter project name</p>
             </td>
             <td>
-                <input type="text" name="projectName">
+                <input type="text" name="projectName" required pattern=".*\S+.*">
             </td>
         </tr>
         </tbody>
