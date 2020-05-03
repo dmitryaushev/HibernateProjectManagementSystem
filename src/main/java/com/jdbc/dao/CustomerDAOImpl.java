@@ -76,12 +76,13 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void delete(Customer customer) {
+    public void delete(int id) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.delete(customer);
+            session.createQuery("delete Customer c where c.id=:id")
+                    .setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
             transactionRollback(transaction);

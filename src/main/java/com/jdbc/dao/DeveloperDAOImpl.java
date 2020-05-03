@@ -77,12 +77,13 @@ public class DeveloperDAOImpl implements DeveloperDAO {
     }
 
     @Override
-    public void delete(Developer developer) {
+    public void delete(int id) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.delete(developer);
+            session.createQuery("delete Developer d where d.id=:id")
+                    .setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
             transactionRollback(transaction);

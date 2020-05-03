@@ -75,12 +75,13 @@ public class CompanyDAOImpl implements CompanyDAO {
     }
 
     @Override
-    public void delete(Company company) {
+    public void delete(int id) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.delete(company);
+            session.createQuery("delete Company c where c.id=:id")
+                    .setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
             transactionRollback(transaction);

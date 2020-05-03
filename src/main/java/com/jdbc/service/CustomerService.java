@@ -34,8 +34,8 @@ public class CustomerService {
         customerDAO.update(customer);
     }
 
-    public void delete(Customer customer) {
-        customerDAO.delete(customer);
+    public void delete(int id) {
+        customerDAO.delete(id);
     }
 
     public String validateCustomer(HttpServletRequest req) {

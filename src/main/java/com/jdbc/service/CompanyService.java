@@ -34,8 +34,8 @@ public class CompanyService {
         companyDAO.update(company);
     }
 
-    public void delete(Company company) {
-        companyDAO.delete(company);
+    public void delete(int id) {
+        companyDAO.delete(id);
     }
 
     public Company mapCompany(HttpServletRequest req) {

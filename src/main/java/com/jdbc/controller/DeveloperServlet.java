@@ -117,8 +117,7 @@ public class DeveloperServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
-        Developer developer = developerService.get(Integer.parseInt(id));
-        developerService.delete(developer);
+        developerService.delete(Integer.parseInt(id));
         resp.sendRedirect("/ProjectManagementSystem/developer/showDevelopers");
     }
 

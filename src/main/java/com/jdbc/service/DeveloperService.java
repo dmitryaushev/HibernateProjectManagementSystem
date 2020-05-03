@@ -39,8 +39,8 @@ public class DeveloperService {
         developerDAO.update(developer);
     }
 
-    public void delete(Developer developer) {
-        developerDAO.delete(developer);
+    public void delete(int id) {
+        developerDAO.delete(id);
     }
 
     public List<Developer> getAllDevelopersByLevel(String level) {

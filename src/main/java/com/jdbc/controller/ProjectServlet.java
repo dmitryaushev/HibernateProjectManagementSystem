@@ -149,8 +149,7 @@ public class ProjectServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
-        Project project = projectService.get(Integer.parseInt(id));
-        projectService.delete(project);
+        projectService.delete(Integer.parseInt(id));
         resp.sendRedirect("/ProjectManagementSystem/project/showProjects");
     }
 

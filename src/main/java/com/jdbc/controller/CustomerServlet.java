@@ -105,8 +105,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
-        Customer customer = customerService.get(Integer.parseInt(id));
-        customerService.delete(customer);
+        customerService.delete(Integer.parseInt(id));
         resp.sendRedirect("/ProjectManagementSystem/customer/showCustomers");
     }
 

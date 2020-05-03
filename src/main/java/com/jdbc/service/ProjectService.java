@@ -49,8 +49,8 @@ public class ProjectService {
         projectDAO.update(project);
     }
 
-    public void delete(Project project) {
-        projectDAO.delete(project);
+    public void delete(int id) {
+        projectDAO.delete(id);
     }
 
     public List<Company> getAllCompanies() {

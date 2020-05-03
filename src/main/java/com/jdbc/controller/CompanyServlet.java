@@ -107,8 +107,7 @@ public class CompanyServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
             String id = req.getParameter("id");
-            Company company = companyService.get(Integer.parseInt(id));
-            companyService.delete(company);
+            companyService.delete(Integer.parseInt(id));
             resp.sendRedirect("/ProjectManagementSystem/company/showCompanies");
     }
 

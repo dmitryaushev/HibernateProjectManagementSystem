@@ -12,5 +12,5 @@ public interface DataAccessObject<T> {
 
     void update(T object);
 
-    void delete(T object);
+    void delete(int id);
 }

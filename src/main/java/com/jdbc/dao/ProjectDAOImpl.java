@@ -76,12 +76,13 @@ public class ProjectDAOImpl implements ProjectDAO {
     }
 
     @Override
-    public void delete(Project project) {
+    public void delete(int id) {
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.delete(project);
+            session.createQuery("delete Project p where p.id=:id")
+                    .setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
             transactionRollback(transaction);
