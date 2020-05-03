@@ -66,6 +66,11 @@ public class DeveloperServlet extends HttpServlet {
             req.setAttribute("developer", developer);
             req.getRequestDispatcher("/view/developer/editDeveloper.jsp").forward(req, resp);
         }
+        else if (action.startsWith("/deleteSkill")){
+            Developer developer = developerService.editSkill(req);
+            req.setAttribute("developer", developer);
+            req.getRequestDispatcher("/view/developer/developerDetails.jsp").forward(req, resp);
+        }
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
         }

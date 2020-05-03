@@ -43,7 +43,11 @@
             <c:choose>
                 <c:when test="${not empty developer.skills}">
                     <c:forEach items="${developer.skills}" var="skill">
-                        <p>${skill.department} ${skill.level}</p>
+                        <p>
+                                ${skill.department} ${skill.level}
+                            <a href="${pageContext.request.contextPath}/developer/deleteSkill?developerID=${developer.developerID}&skillID=${skill.skillID}"
+                               class="button" role="button" tabindex="0">-</a><br>
+                        </p>
                     </c:forEach>
                 </c:when>
                 <c:otherwise>

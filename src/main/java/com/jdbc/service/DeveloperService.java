@@ -148,4 +148,24 @@ public class DeveloperService {
             return getAllDeveloperBySkill(department, level);
         }
     }
+
+    public Developer editSkill(HttpServletRequest req) {
+        String developerID = req.getParameter("developerID");
+        String skillID = req.getParameter("skillID");
+
+        Developer developer = get(Integer.parseInt(developerID));
+        List<Skill> skills = developer.getSkills();
+
+        Skill skill = new Skill();
+        for (Skill s : skills){
+            if (s.getSkillID() == Integer.parseInt(skillID)){
+                skill = s;
+            }
+        }
+        skills.remove(skill);
+
+        developer.setSkills(skills);
+        update(developer);
+        return developer;
+    }
 }
