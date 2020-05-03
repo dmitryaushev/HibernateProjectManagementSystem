@@ -79,6 +79,10 @@
     </tbody>
 </table>
 <a href="${pageContext.request.contextPath}/project/edit?id=${project.projectID}"
-   class="button" role="button" tabindex="0">Edit</a><br>
+   class="button" role="button" tabindex="0">Edit</a>
+<a href="${pageContext.request.contextPath}/project/link?id=${project.projectID}"
+   class="button" role="button" tabindex="0">Link</a>
+<a href="${pageContext.request.contextPath}/project/unlink?id=${project.projectID}"
+   class="button" role="button" tabindex="0">unlink</a>
 </body>
 </html>

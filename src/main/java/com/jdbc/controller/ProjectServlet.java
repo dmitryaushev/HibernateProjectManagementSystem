@@ -1,7 +1,13 @@
 package com.jdbc.controller;
 
 import com.jdbc.config.HibernateDatabaseConnector;
+import com.jdbc.dao.CompanyDAOImpl;
+import com.jdbc.dao.CustomerDAOImpl;
+import com.jdbc.dao.DeveloperDAOImpl;
 import com.jdbc.dao.ProjectDAOImpl;
+import com.jdbc.model.Company;
+import com.jdbc.model.Customer;
+import com.jdbc.model.Developer;
 import com.jdbc.model.Project;
 import com.jdbc.service.ProjectService;
 
@@ -21,7 +27,11 @@ public class ProjectServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        projectService = new ProjectService(new ProjectDAOImpl(HibernateDatabaseConnector.getSessionFactory()));
+        projectService = new ProjectService(
+                new ProjectDAOImpl(HibernateDatabaseConnector.getSessionFactory()),
+                new CompanyDAOImpl(HibernateDatabaseConnector.getSessionFactory()),
+                new CustomerDAOImpl(HibernateDatabaseConnector.getSessionFactory()),
+                new DeveloperDAOImpl(HibernateDatabaseConnector.getSessionFactory()));
     }
 
     @Override
@@ -72,6 +82,29 @@ public class ProjectServlet extends HttpServlet {
         else if (action.startsWith("/delete")) {
             doDelete(req, resp);
         }
+        else if (action.startsWith("/link")) {
+            String id = req.getParameter("id");
+            Project project = projectService.get(Integer.parseInt(id));
+            List<Company> companies = projectService.getAllCompanies();
+            List<Customer> customers = projectService.getAllCustomers();
+            List<Developer> developers = projectService.getAllDevelopers();
+            req.setAttribute("project", project);
+            req.setAttribute("companies", companies);
+            req.setAttribute("customers", customers);
+            req.setAttribute("developers", developers);
+            req.getRequestDispatcher("/view/linkProject.jsp").forward(req, resp);
+        }
+        else if ((action.startsWith("/unlinkAll"))) {
+            Project project = projectService.unlinkAll(req);
+            req.setAttribute("project", project);
+            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+        }
+        else if (action.startsWith("/unlink")) {
+            String id = req.getParameter("id");
+            Project project = projectService.get(Integer.parseInt(id));
+            req.setAttribute("project", project);
+            req.getRequestDispatcher("/view/unlinkProject.jsp").forward(req, resp);
+        }
     }
 
     @Override
@@ -105,6 +138,16 @@ public class ProjectServlet extends HttpServlet {
                 req.setAttribute("project", project);
                 req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
             }
+        }
+        else if (action.startsWith("/linkProject")) {
+            Project project = projectService.link(req);
+            req.setAttribute("project", project);
+            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
+        }
+        else if (action.startsWith("/unlinkProject")){
+            Project project = projectService.unlink(req);
+            req.setAttribute("project", project);
+            req.getRequestDispatcher("/view/projectDetails.jsp").forward(req, resp);
         }
     }
 

@@ -16,7 +16,7 @@
         <tr>
             <th>Developers</th>
             <th>
-                <select name="department" multiple>
+                <select name="department">
                     <option selected disabled>Department</option>
                     <option>Java</option>
                     <option>C++</option>

@@ -1,6 +1,7 @@
 package com.jdbc.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Developer {
 
@@ -97,5 +98,18 @@ public class Developer {
                 ", age=" + age +
                 ", salary=" + salary +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Developer developer = (Developer) o;
+        return developerID == developer.developerID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(developerID);
     }
 }

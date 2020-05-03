@@ -1,6 +1,7 @@
 package com.jdbc.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Company {
 
@@ -48,5 +49,18 @@ public class Company {
                 ", companyName='" + companyName + '\'' +
                 ", location='" + location + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return companyID == company.companyID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyID);
     }
 }
