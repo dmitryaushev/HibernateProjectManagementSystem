@@ -3,12 +3,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Course management</title>
+    <title>Project management system</title>
     <style>
         <%@include file="style.css" %>
     </style>
 </head>
 <body>
 <c:import url="navibar.jsp"/>
+<div><img src="https://5.imimg.com/data5/XQ/IM/GLADMIN-10740945/project-management-system-500x500.png"
+          alt="Project management system"/></div>
 </body>
 </html>

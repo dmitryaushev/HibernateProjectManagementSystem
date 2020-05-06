@@ -83,6 +83,6 @@
 <a href="${pageContext.request.contextPath}/project/link?id=${project.projectID}"
    class="button" role="button" tabindex="0">Link</a>
 <a href="${pageContext.request.contextPath}/project/unlink?id=${project.projectID}"
-   class="button" role="button" tabindex="0">unlink</a>
+   class="button" role="button" tabindex="0">Unlink</a>
 </body>
 </html>

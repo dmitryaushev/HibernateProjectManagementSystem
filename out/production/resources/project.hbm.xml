@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jdbc.model.Project" table="projects" catalog="it" schema="public">
+        <id name="projectID" type="java.lang.Integer">
+            <column name="project_id"/>
+            <generator class="increment">
+                <param name="sequence">projects_project_id_seq</param>
+            </generator>
+        </id>
+        <property name="projectName" type="java.lang.String">
+            <column name="project_name"/>
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="status"/>
+        </property>
+        <property name="cost" type="java.lang.Integer">
+            <column name="cost"/>
+        </property>
+        <property name="date" type="java.sql.Date">
+            <column name="date"/>
+        </property>
+        <bag name="developers" table="developer_project" lazy="false">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <many-to-many column="developer_id" class="com.jdbc.model.Developer"/>
+        </bag>
+        <bag name="companies" table="company_project" lazy="false">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <many-to-many column="company_id" class="com.jdbc.model.Company"/>
+        </bag>
+        <bag name="customers" table="customer_project" lazy="false">
+            <key>
+                <column name="project_id"/>
+            </key>
+            <many-to-many column="customer_id" class="com.jdbc.model.Customer"/>
+        </bag>
+    </class>
+</hibernate-mapping>

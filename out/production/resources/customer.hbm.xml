@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jdbc.model.Customer" table="customers" catalog="it" schema="public">
+        <id name="customerID" type="java.lang.Integer">
+            <column name="customer_id"/>
+            <generator class="increment">
+                <param name="sequence">customers_customer_id_seq</param>
+            </generator>
+        </id>
+        <property name="customerName" type="java.lang.String">
+            <column name="customer_name"/>
+        </property>
+        <property name="location" type="java.lang.String">
+            <column name="location"/>
+        </property>
+        <bag name="projects" table="customer_project" lazy="false">
+            <key>
+                <column name="customer_id"/>
+            </key>
+            <many-to-many column="project_id" class="com.jdbc.model.Project"/>
+        </bag>
+    </class>
+</hibernate-mapping>

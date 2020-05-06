@@ -121,44 +121,43 @@ public class ProjectService {
     public Project link(HttpServletRequest req) {
 
         String id = req.getParameter("projectID");
+        Project project = get(Integer.parseInt(id));
+
         String[] reqCompanies = req.getParameterValues("companies");
         String[] reqCustomers = req.getParameterValues("customers");
         String[] reqDevelopers = req.getParameterValues("developers");
 
-        Project project = get(Integer.parseInt(id));
-        List<Company> companies = project.getCompanies();
-        List<Customer> customers = project.getCustomers();
-        List<Developer> developers = project.getDevelopers();
-
         if (reqCompanies != null) {
+            List<Company> companies = project.getCompanies();
             for (String companyName : reqCompanies) {
                 Company company = companyDAO.get(companyName);
                 if (!companies.contains(company)) {
                     companies.add(company);
                 }
             }
+            project.setCompanies(companies);
         }
         if (reqCustomers != null) {
+            List<Customer> customers = project.getCustomers();
             for (String customerName : reqCustomers) {
                 Customer customer = customerDAO.get(customerName);
                 if (!customers.contains(customer)) {
                     customers.add(customer);
                 }
             }
+            project.setCustomers(customers);
         }
         if (reqDevelopers != null) {
-            for (String developerName : reqDevelopers) {
-                String developerID = developerName.split("\\.")[0];
+            List<Developer> developers = project.getDevelopers();
+            for (String developerID : reqDevelopers) {
                 Developer developer = developerDAO.getByID(Integer.parseInt(developerID));
                 if (!developers.contains(developer)) {
                     developers.add(developer);
                 }
             }
+            project.setDevelopers(developers);
         }
 
-        project.setCompanies(companies);
-        project.setCustomers(customers);
-        project.setDevelopers(developers);
         update(project);
         return project;
     }
@@ -166,40 +165,35 @@ public class ProjectService {
     public Project unlink(HttpServletRequest req) {
 
         String id = req.getParameter("projectID");
+        Project project = get(Integer.parseInt(id));
+
         String[] reqCompanies = req.getParameterValues("companies");
         String[] reqCustomers = req.getParameterValues("customers");
         String[] reqDevelopers = req.getParameterValues("developers");
 
-        Project project = get(Integer.parseInt(id));
-        List<Company> companies = project.getCompanies();
-        List<Customer> customers = project.getCustomers();
-        List<Developer> developers = project.getDevelopers();
 
         if (reqCompanies != null) {
+            List<Company> companies = project.getCompanies();
             for (String companyName : reqCompanies) {
-                Company company = companyDAO.get(companyName);
-                companies.remove(company);
+                companies.removeIf(company -> company.getCompanyName().equals(companyName));
             }
+            project.setCompanies(companies);
         }
         if (reqCustomers != null) {
+            List<Customer> customers = project.getCustomers();
             for (String customerName : reqCustomers) {
-                Customer customer = customerDAO.get(customerName);
-                customers.remove(customer);
-
+                customers.removeIf(customer -> customer.getCustomerName().equals(customerName));
             }
+            project.setCustomers(customers);
         }
         if (reqDevelopers != null) {
-            for (String developerName : reqDevelopers) {
-                String developerID = developerName.split("\\.")[0];
-                Developer developer = developerDAO.getByID(Integer.parseInt(developerID));
-                developers.remove(developer);
-
+            List<Developer> developers = project.getDevelopers();
+            for (String developerID : reqDevelopers) {
+                developers.removeIf(developer -> developer.getDeveloperID() == Integer.parseInt(developerID));
             }
+            project.setDevelopers(developers);
         }
 
-        project.setCompanies(companies);
-        project.setCustomers(customers);
-        project.setDevelopers(developers);
         update(project);
         return project;
     }

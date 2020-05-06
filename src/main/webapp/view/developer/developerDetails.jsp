@@ -46,7 +46,7 @@
                         <p>
                                 ${skill.department} ${skill.level}
                             <a href="${pageContext.request.contextPath}/developer/deleteSkill?developerID=${developer.developerID}&skillID=${skill.skillID}"
-                               class="button" role="button" tabindex="0">-</a><br>
+                               class="button1" role="button" tabindex="0">X</a><br>
                         </p>
                     </c:forEach>
                 </c:when>

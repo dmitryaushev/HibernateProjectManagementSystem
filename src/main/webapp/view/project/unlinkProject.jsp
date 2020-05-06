@@ -57,8 +57,8 @@
                 <select name="developers" multiple>
                     <c:if test="${not empty project.developers}">
                         <c:forEach items="${project.developers}" var="developer">
-                            <option>
-                                    ${developer.developerID}.${developer.firstName} ${developer.lastName}
+                            <option hidden name="developerID" value="${developer.developerID}">
+                                    ${developer.firstName} ${developer.lastName}
                             </option>
                         </c:forEach>
                     </c:if>
